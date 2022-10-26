@@ -55,6 +55,7 @@ public enum TobagoClass implements CssItem {
 //  FILE("tobago-file"),
 //  FIGURE("tobago-figure"),
   FOLDER("tobago-folder"),
+  FILTER__WRAPPER("tobago-filter-wrapper"),
   HEADER("tobago-header"),
 //  IMAGE("tobago-image"),
   // tbd: can be removed?

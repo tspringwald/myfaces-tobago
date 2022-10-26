@@ -168,6 +168,7 @@ public enum HtmlElements {
   TOBAGO_SEGMENT_LAYOUT("tobago-segment-layout"),
   TOBAGO_SELECT_BOOLEAN_CHECKBOX("tobago-select-boolean-checkbox"),
   TOBAGO_SELECT_BOOLEAN_TOGGLE("tobago-select-boolean-toggle"),
+  TOBAGO_SELECT_MANY("tobago-select-many"),
   TOBAGO_SELECT_MANY_CHECKBOX("tobago-select-many-checkbox"),
   TOBAGO_SELECT_MANY_LISTBOX("tobago-select-many-listbox"),
   TOBAGO_SELECT_MANY_SHUTTLE("tobago-select-many-shuttle"),

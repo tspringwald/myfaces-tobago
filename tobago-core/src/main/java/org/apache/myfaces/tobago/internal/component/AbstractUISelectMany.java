@@ -21,6 +21,7 @@ package org.apache.myfaces.tobago.internal.component;
 
 import org.apache.myfaces.tobago.component.SupportFieldId;
 import org.apache.myfaces.tobago.component.SupportsAutoSpacing;
+import org.apache.myfaces.tobago.component.SupportsFilter;
 import org.apache.myfaces.tobago.component.SupportsHelp;
 import org.apache.myfaces.tobago.component.SupportsLabelLayout;
 import org.apache.myfaces.tobago.component.Visual;
@@ -34,7 +35,8 @@ import java.util.Collection;
  * {@link org.apache.myfaces.tobago.internal.taglib.component.SelectManyTagDeclaration}
  */
 public abstract class AbstractUISelectMany extends AbstractUISelectManyBase
-  implements SupportsAutoSpacing, Visual, SupportsLabelLayout, ClientBehaviorHolder, SupportsHelp, SupportFieldId {
+  implements SupportsAutoSpacing, Visual, SupportsLabelLayout, ClientBehaviorHolder, SupportsHelp, SupportFieldId,
+  SupportsFilter {
 
   private transient boolean nextToRenderIsLabel;
 
@@ -66,6 +68,8 @@ public abstract class AbstractUISelectMany extends AbstractUISelectManyBase
   }
 
   public abstract boolean isFocus();
+
+  public abstract String getFilter();
 
   @Override
   public boolean isNextToRenderIsLabel() {

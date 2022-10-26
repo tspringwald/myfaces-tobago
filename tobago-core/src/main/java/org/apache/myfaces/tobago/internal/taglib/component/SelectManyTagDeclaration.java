@@ -30,6 +30,7 @@ import org.apache.myfaces.tobago.internal.taglib.declaration.HasAutoSpacing;
 import org.apache.myfaces.tobago.internal.taglib.declaration.HasBinding;
 import org.apache.myfaces.tobago.internal.taglib.declaration.HasConverter;
 import org.apache.myfaces.tobago.internal.taglib.declaration.HasConverterMessage;
+import org.apache.myfaces.tobago.internal.taglib.declaration.HasFilter;
 import org.apache.myfaces.tobago.internal.taglib.declaration.HasHelp;
 import org.apache.myfaces.tobago.internal.taglib.declaration.HasId;
 import org.apache.myfaces.tobago.internal.taglib.declaration.HasLabel;
@@ -79,7 +80,7 @@ public interface SelectManyTagDeclaration
   extends HasId, IsDisabled, IsRendered, HasBinding, HasTip, HasHelp,
   IsReadonly, HasConverter, IsRequiredForSelect, HasLabel, HasValidator, HasValueChangeListener, HasLabelLayout,
   HasValidatorMessage, HasConverterMessage, HasRequiredMessageForSelect, HasTabIndex, IsFocus, IsVisual,
-  HasAutoSpacing {
+  HasAutoSpacing, HasFilter {
 
   /**
    * The value of the multi select.
