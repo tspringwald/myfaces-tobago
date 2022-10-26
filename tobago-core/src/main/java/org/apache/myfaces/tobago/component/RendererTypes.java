@@ -66,6 +66,7 @@ public enum RendererTypes {
   SegmentLayout,
   SelectBooleanCheckbox,
   SelectBooleanToggle,
+  SelectMany,
   SelectManyCheckbox,
   SelectManyListbox,
   SelectManyShuttle,
@@ -138,6 +139,7 @@ public enum RendererTypes {
   public static final String SEGMENT_LAYOUT = "SegmentLayout";
   public static final String SELECT_BOOLEAN_CHECKBOX = "SelectBooleanCheckbox";
   public static final String SELECT_BOOLEAN_TOGGLE = "SelectBooleanToggle";
+  public static final String SELECT_MANY = "SelectMany";
   public static final String SELECT_MANY_CHECKBOX = "SelectManyCheckbox";
   public static final String SELECT_MANY_LISTBOX = "SelectManyListbox";
   public static final String SELECT_MANY_SHUTTLE = "SelectManyShuttle";

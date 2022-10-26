@@ -72,6 +72,7 @@ public enum Tags {
   selectBooleanToggle,
   selectItem,
   selectItems,
+  selectMany,
   selectManyCheckbox,
   selectManyListbox,
   selectManyShuttle,
@@ -143,6 +144,7 @@ public enum Tags {
   public static final String SELECT_BOOLEAN_TOGGLE = "selectBooleanToggle";
   public static final String SELECT_ITEM = "selectItem";
   public static final String SELECT_ITEMS = "selectItems";
+  public static final String SELECT_MANY = "selectMany";
   public static final String SELECT_MANY_CHECKBOX = "selectManyCheckbox";
   public static final String SELECT_MANY_LISTBOX = "selectManyListbox";
   public static final String SELECT_MANY_SHUTTLE = "selectManyShuttle";
