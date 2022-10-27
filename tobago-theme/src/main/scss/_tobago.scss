@@ -1175,16 +1175,32 @@ tobago-select-one-radio {
 }
 
 tobago-select-many {
-  .dropdown-menu {
-    .tobago-filter-wrapper {
-      display: flex;
+  .tobago-filter-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 
-      .form-control {
-        margin-left: var(--bs-dropdown-item-padding-x);
-        margin-right: var(--bs-dropdown-item-padding-x);
-      }
+    .badge {
+      margin-right: 0.125rem;
     }
 
+    .tobago-filter {
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      flex: 1 0 0;
+
+      &:focus {
+        margin: 0;
+        border: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .dropdown-menu {
     .table {
       margin-bottom: 0;
     }

@@ -28,6 +28,7 @@ import org.apache.myfaces.tobago.renderkit.css.BootstrapClass;
 import org.apache.myfaces.tobago.renderkit.css.TobagoClass;
 import org.apache.myfaces.tobago.renderkit.html.HtmlAttributes;
 import org.apache.myfaces.tobago.renderkit.html.HtmlElements;
+import org.apache.myfaces.tobago.renderkit.html.HtmlInputTypes;
 import org.apache.myfaces.tobago.util.ComponentUtils;
 import org.apache.myfaces.tobago.webapp.TobagoResponseWriter;
 
@@ -62,46 +63,17 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final String title = HtmlRendererUtils.getTitleFromTipAndMessages(facesContext, component);
 
     renderHiddenSelect(facesContext, component);
+    renderFilterInput(facesContext, component);
 
     writer.startElement(HtmlElements.DIV);
-    writer.writeIdAttribute(fieldId);
-    writer.writeNameAttribute(clientId);
-    HtmlRendererUtils.writeDataAttributes(facesContext, writer, component);
-    writer.writeClassAttribute(
-      BootstrapClass.FORM_SELECT,
-      BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
-      component.getCustomClass());
-    writer.writeAttribute(HtmlAttributes.TITLE, title, true);
+    writer.writeClassAttribute(BootstrapClass.DROPDOWN_MENU);
+
+    writer.startElement(HtmlElements.TABLE);
+    writer.writeClassAttribute(BootstrapClass.TABLE, BootstrapClass.TABLE_HOVER, BootstrapClass.TABLE_SM);
+    writer.startElement(HtmlElements.TBODY);
 
     final Object[] values = component.getSelectedValues();
     final String[] submittedValues = getSubmittedValues(component);
-
-    renderBadges(facesContext, values, submittedValues);
-
-    /*renderSelectItems(
-      component, TobagoClass.SELECT_MANY_LISTBOX__OPTION, items, values, submittedValues, writer, facesContext);*/
-
-    writer.startElement(HtmlElements.DIV);
-    writer.writeClassAttribute(BootstrapClass.DROPDOWN_MENU, BootstrapClass.SHOW);
-
-    if (filter != null) {
-      writer.startElement(HtmlElements.DIV);
-      writer.writeClassAttribute(TobagoClass.FILTER__WRAPPER);
-      writer.startElement(HtmlElements.INPUT);
-      writer.writeIdAttribute(filterId);
-      writer.writeClassAttribute(BootstrapClass.FORM_CONTROL);
-      writer.endElement(HtmlElements.INPUT);
-      writer.endElement(HtmlElements.DIV);
-
-      writer.startElement(HtmlElements.HR);
-      writer.writeClassAttribute(BootstrapClass.DROPDOWN_DIVIDER);
-      writer.endElement(HtmlElements.HR);
-    }
-
-    writer.startElement(HtmlElements.TABLE);
-    writer.writeClassAttribute(BootstrapClass.TABLE, BootstrapClass.TABLE_HOVER);
-    writer.startElement(HtmlElements.TBODY);
-
     for (SelectItem item : items) {
       Object itemValue = item.getValue();
       // when using selectItem tag with a literal value: use the converted value
@@ -160,6 +132,44 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.endElement(HtmlElements.SELECT);
   }
 
+  private void renderFilterInput(FacesContext facesContext, T component) throws IOException {
+    final TobagoResponseWriter writer = getResponseWriter(facesContext);
+
+    final String clientId = component.getClientId(facesContext);
+    final String fieldId = component.getFieldId(facesContext);
+    final String filterId = clientId + ComponentUtils.SUB_SEPARATOR + "filter";
+    final List<SelectItem> items = SelectItemUtils.getItemList(facesContext, component);
+    final boolean readonly = component.isReadonly();
+    final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || readonly;
+    final String filter = component.getFilter();
+    final Markup markup = component.getMarkup();
+    final String title = HtmlRendererUtils.getTitleFromTipAndMessages(facesContext, component);
+
+    writer.startElement(HtmlElements.DIV);
+    writer.writeIdAttribute(fieldId);
+    writer.writeNameAttribute(clientId);
+    HtmlRendererUtils.writeDataAttributes(facesContext, writer, component);
+    writer.writeClassAttribute(
+      BootstrapClass.FORM_SELECT,
+      TobagoClass.FILTER__WRAPPER,
+      BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
+      component.getCustomClass());
+    writer.writeAttribute(HtmlAttributes.TITLE, title, true);
+
+    final Object[] values = component.getSelectedValues();
+    final String[] submittedValues = getSubmittedValues(component);
+
+    renderBadges(facesContext, values, submittedValues);
+
+    writer.startElement(HtmlElements.INPUT);
+    writer.writeAttribute(HtmlAttributes.TYPE, HtmlInputTypes.TEXT);
+    writer.writeIdAttribute(filterId);
+    writer.writeClassAttribute(TobagoClass.FILTER, BootstrapClass.FORM_CONTROL);
+    writer.endElement(HtmlElements.INPUT);
+
+    writer.endElement(HtmlElements.DIV);
+  }
+
   private void renderBadges(FacesContext facesContext, Object[] values, String[] submittedValues) throws IOException {
     final TobagoResponseWriter writer = getResponseWriter(facesContext);
 
@@ -183,8 +193,6 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
   @Override
   protected void encodeEndField(FacesContext facesContext, T component) throws IOException {
     final TobagoResponseWriter writer = getResponseWriter(facesContext);
-
-    writer.endElement(HtmlElements.DIV);
 
     encodeBehavior(writer, facesContext, component);
   }
