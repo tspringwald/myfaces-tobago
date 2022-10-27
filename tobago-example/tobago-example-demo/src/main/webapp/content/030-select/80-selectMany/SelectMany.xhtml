@@ -26,6 +26,12 @@
     <tc:selectItems value="#{selectManyController.planets}"
                     var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
   </tc:selectMany>
+
+  inline:
+  <tc:selectMany value="#{selectManyController.selectedPlanets}" filter="contains" inline="true">
+    <tc:selectItems value="#{selectManyController.planets}"
+                    var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
+  </tc:selectMany>
   <tc:button label="Submit"/>
 
 </ui:composition>

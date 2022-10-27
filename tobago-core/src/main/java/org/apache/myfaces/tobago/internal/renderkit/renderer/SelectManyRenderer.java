@@ -25,6 +25,7 @@ import org.apache.myfaces.tobago.internal.util.ArrayUtils;
 import org.apache.myfaces.tobago.internal.util.HtmlRendererUtils;
 import org.apache.myfaces.tobago.internal.util.SelectItemUtils;
 import org.apache.myfaces.tobago.renderkit.css.BootstrapClass;
+import org.apache.myfaces.tobago.renderkit.css.CssItem;
 import org.apache.myfaces.tobago.renderkit.css.TobagoClass;
 import org.apache.myfaces.tobago.renderkit.html.HtmlAttributes;
 import org.apache.myfaces.tobago.renderkit.html.HtmlElements;
@@ -44,6 +45,12 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
   }
 
   @Override
+  protected CssItem[] getComponentCss(final FacesContext facesContext, final T component) {
+    final boolean inline = component.isInline();
+    return inline ? new CssItem[]{BootstrapClass.LIST_GROUP} : null;
+  }
+
+  @Override
   protected String getFieldId(FacesContext facesContext, T component) {
     return component.getFieldId(facesContext);
   }
@@ -59,6 +66,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final boolean readonly = component.isReadonly();
     final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || readonly;
     final String filter = component.getFilter();
+    final boolean inline = component.isInline();
     final Markup markup = component.getMarkup();
     final String title = HtmlRendererUtils.getTitleFromTipAndMessages(facesContext, component);
 
@@ -66,7 +74,9 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     renderFilterInput(facesContext, component);
 
     writer.startElement(HtmlElements.DIV);
-    writer.writeClassAttribute(BootstrapClass.DROPDOWN_MENU);
+    writer.writeClassAttribute(
+      TobagoClass.OPTIONS,
+      inline ? BootstrapClass.LIST_GROUP_ITEM : BootstrapClass.DROPDOWN_MENU);
     writer.writeNameAttribute(clientId);
 
     writer.startElement(HtmlElements.TABLE);
@@ -143,6 +153,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final boolean readonly = component.isReadonly();
     final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || readonly;
     final String filter = component.getFilter();
+    final boolean inline = component.isInline();
     final Markup markup = component.getMarkup();
     final String title = HtmlRendererUtils.getTitleFromTipAndMessages(facesContext, component);
 
@@ -153,6 +164,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.writeClassAttribute(
       BootstrapClass.FORM_SELECT,
       TobagoClass.FILTER__WRAPPER,
+      inline ? BootstrapClass.LIST_GROUP_ITEM : null,
       BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
       component.getCustomClass());
     writer.writeAttribute(HtmlAttributes.TITLE, title, true);

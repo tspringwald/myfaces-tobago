@@ -71,6 +71,7 @@ public enum TobagoClass implements CssItem {
   NOW("tobago-now"),
   NUMBER("tobago-number"),
   OBJECT("tobago-object"),
+  OPTIONS("tobago-options"),
   OUT("tobago-out"),
 //  PAGE("tobago-page"),
   PAGE__MENU_STORE("tobago-page-menuStore"),

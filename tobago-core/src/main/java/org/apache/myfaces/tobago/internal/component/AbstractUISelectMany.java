@@ -61,6 +61,8 @@ public abstract class AbstractUISelectMany extends AbstractUISelectManyBase
 
   public abstract boolean isReadonly();
 
+  public abstract boolean isInline();
+
   public boolean isError() {
     final FacesContext facesContext = FacesContext.getCurrentInstance();
     return !isValid()

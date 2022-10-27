@@ -410,6 +410,8 @@ public enum BootstrapClass implements CssItem {
   JUSTIFY_CONTENT_CENTER("justify-content-center"),
   JUSTIFY_CONTENT_END("justify-content-end"),
   JUSTIFY_CONTENT_START("justify-content-start"),
+  LIST_GROUP("list-group"),
+  LIST_GROUP_ITEM("list-group-item"),
   MB_0("mb-0"),
   MB_1("mb-1"),
   MB_2("mb-2"),

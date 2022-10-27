@@ -1180,6 +1180,13 @@ tobago-select-many {
     flex-wrap: wrap;
     align-items: center;
 
+    &.list-group-item.form-select {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+
+      padding: $form-select-padding-y $form-select-indicator-padding $form-select-padding-y $form-select-padding-x;
+    }
+
     .badge {
       margin-right: 0.125rem;
     }
@@ -1200,7 +1207,11 @@ tobago-select-many {
     }
   }
 
-  .dropdown-menu {
+  .tobago-options {
+    &.list-group-item {
+      padding: 0;
+    }
+
     .table {
       margin-bottom: 0;
     }
