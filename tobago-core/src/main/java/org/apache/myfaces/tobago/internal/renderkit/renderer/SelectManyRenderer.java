@@ -67,6 +67,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
 
     writer.startElement(HtmlElements.DIV);
     writer.writeClassAttribute(BootstrapClass.DROPDOWN_MENU);
+    writer.writeNameAttribute(clientId);
 
     writer.startElement(HtmlElements.TABLE);
     writer.writeClassAttribute(BootstrapClass.TABLE, BootstrapClass.TABLE_HOVER, BootstrapClass.TABLE_SM);
@@ -165,6 +166,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.writeAttribute(HtmlAttributes.TYPE, HtmlInputTypes.TEXT);
     writer.writeIdAttribute(filterId);
     writer.writeClassAttribute(TobagoClass.FILTER, BootstrapClass.FORM_CONTROL);
+    writer.writeAttribute(HtmlAttributes.AUTOCOMPLETE, "off", false);
     writer.endElement(HtmlElements.INPUT);
 
     writer.endElement(HtmlElements.DIV);
