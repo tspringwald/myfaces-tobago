@@ -27,6 +27,7 @@ import org.apache.myfaces.tobago.internal.util.SelectItemUtils;
 import org.apache.myfaces.tobago.renderkit.css.BootstrapClass;
 import org.apache.myfaces.tobago.renderkit.css.CssItem;
 import org.apache.myfaces.tobago.renderkit.css.TobagoClass;
+import org.apache.myfaces.tobago.renderkit.html.DataAttributes;
 import org.apache.myfaces.tobago.renderkit.html.HtmlAttributes;
 import org.apache.myfaces.tobago.renderkit.html.HtmlElements;
 import org.apache.myfaces.tobago.renderkit.html.HtmlInputTypes;
@@ -99,6 +100,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
         contains = ArrayUtils.contains(submittedValues, formattedValue);
       }
       writer.startElement(HtmlElements.TR);
+      writer.writeAttribute(DataAttributes.VALUE, formattedValue, true);
       writer.writeClassAttribute(
         contains ? BootstrapClass.TABLE_ACTIVE : null,
         item.isDisabled() ? BootstrapClass.TEXT_MUTED : null);
