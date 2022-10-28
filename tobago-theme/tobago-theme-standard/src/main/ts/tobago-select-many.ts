@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import {BootstrapEvents} from "./BootstrapEvents";
+
 class SelectMany extends HTMLElement {
 
   private readonly CssClass = {
@@ -38,7 +40,8 @@ class SelectMany extends HTMLElement {
   }
 
   get dropdownMenu(): HTMLDivElement {
-    return this.querySelector(".dropdown-menu");
+    const root = this.getRootNode() as ShadowRoot | Document;
+    return root.querySelector(`.dropdown-menu[name='${this.id}']`);
   }
 
   get menuStore(): HTMLDivElement {
@@ -56,7 +59,11 @@ class SelectMany extends HTMLElement {
     // todo: implement select/deselect options
     // todo: implement remove badge
 
-    this.selectField.addEventListener("click", this.showDropdownMenu.bind(this));
+    window.addEventListener("resize", this.resizeEvent.bind(this));
+    this.addEventListener(BootstrapEvents.DROPDOWN_SHOW, this.showDropdown.bind(this));
+    this.addEventListener(BootstrapEvents.DROPDOWN_SHOWN, this.shownDropdown.bind(this));
+    this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.hideDropdown.bind(this));
+    this.addEventListener(BootstrapEvents.DROPDOWN_HIDDEN, this.HiddenDropdown.bind(this));
 
     // todo: later
     // this.hiddenSelect.addEventListener("change", ((event: InputEvent) => {
@@ -109,6 +116,45 @@ class SelectMany extends HTMLElement {
 
   private showDropdownMenu(event: MouseEvent): void {
     this.dropdownMenu.classList.add(this.CssClass.SHOW);
+  }
+
+  private showDropdown(event: Event): void {
+    // console.log("### showDropdown");
+  }
+
+  private shownDropdown(event: Event): void {
+    this.setDropdownMenuWidth();
+    // console.log("### shownDropdown");
+  }
+
+  private hideDropdown(event: Event): void {
+    // console.log("### hideDropdown");
+  }
+
+  private HiddenDropdown(event: Event): void {
+    // console.log("### HiddenDropdown");
+  }
+
+  private resizeEvent(event: UIEvent): void {
+    this.setDropdownMenuWidth();
+  }
+
+  private setDropdownMenuWidth(): void {
+    if (this.dropdownMenu) {
+      this.dropdownMenu.style.width = `${this.offsetWidth}px`;
+    }
+  }
+
+  private focusFilter(event: MouseEvent): void {
+    // console.log("### focusFilter");
+  }
+
+  private blurFilter(event: MouseEvent): void {
+    // console.log("### blurFilter");
+  }
+
+  private blurSelect(event: MouseEvent): void {
+    // console.log("### blurSelect");
   }
 
   private initList() {

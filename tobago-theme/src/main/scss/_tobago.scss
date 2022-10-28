@@ -1175,6 +1175,8 @@ tobago-select-one-radio {
 }
 
 tobago-select-many {
+  display: block;
+
   .tobago-filter-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -1204,9 +1206,6 @@ tobago-select-many {
       min-width: 8rem;
 
       &:focus {
-        margin: 0;
-        border: 0;
-        padding: 0;
         box-shadow: none;
       }
     }

@@ -15,12 +15,7 @@
  * limitations under the License.
  */
 
-const TobagoDropdownEvent = {
-  HIDE: "tobago.dropdown.hide",
-  HIDDEN: "tobago.dropdown.hidden",
-  SHOW: "tobago.dropdown.show",
-  SHOWN: "tobago.dropdown.shown"
-};
+import {BootstrapEvents} from "./BootstrapEvents";
 
 /**
  * The dropdown implementation of Bootstrap does not move the menu to the tobago-page-menuStore. This behavior is
@@ -28,11 +23,18 @@ const TobagoDropdownEvent = {
  */
 class Dropdown extends HTMLElement {
 
+  private readonly TobagoEvents = {
+    HIDE: "tobago.dropdown.hide",
+    HIDDEN: "tobago.dropdown.hidden",
+    SHOW: "tobago.dropdown.show",
+    SHOWN: "tobago.dropdown.shown"
+  };
+
   constructor() {
     super();
     if (!this.classList.contains("tobago-dropdown-submenu")) { // ignore submenus
-      this.addEventListener("shown.bs.dropdown", this.openDropdown.bind(this));
-      this.addEventListener("hidden.bs.dropdown", this.closeDropdown.bind(this));
+      this.addEventListener(BootstrapEvents.DROPDOWN_SHOWN, this.openDropdown.bind(this));
+      this.addEventListener(BootstrapEvents.DROPDOWN_HIDDEN, this.closeDropdown.bind(this));
     }
     // the click should not sort the column of a table - XXX not very nice - may look for a better solution
     if (this.closest("tr") != null) {
@@ -43,21 +45,21 @@ class Dropdown extends HTMLElement {
   }
 
   openDropdown(): void {
-    this.dispatchEvent(new CustomEvent(TobagoDropdownEvent.SHOW));
+    this.dispatchEvent(new CustomEvent(this.TobagoEvents.SHOW));
 
     if (!this.insideNavbar()) {
       this.menuStore.appendChild(this.dropdownMenu);
     }
 
-    this.dispatchEvent(new CustomEvent(TobagoDropdownEvent.SHOWN));
+    this.dispatchEvent(new CustomEvent(this.TobagoEvents.SHOWN));
   }
 
   closeDropdown(): void {
-    this.dispatchEvent(new CustomEvent(TobagoDropdownEvent.HIDE));
+    this.dispatchEvent(new CustomEvent(this.TobagoEvents.HIDE));
     if (!this.insideNavbar()) {
       this.appendChild(this.dropdownMenu);
     }
-    this.dispatchEvent(new CustomEvent(TobagoDropdownEvent.HIDDEN));
+    this.dispatchEvent(new CustomEvent(this.TobagoEvents.HIDDEN));
   }
 
   /**

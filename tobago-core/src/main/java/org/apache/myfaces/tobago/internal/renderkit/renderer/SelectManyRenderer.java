@@ -27,6 +27,7 @@ import org.apache.myfaces.tobago.internal.util.SelectItemUtils;
 import org.apache.myfaces.tobago.renderkit.css.BootstrapClass;
 import org.apache.myfaces.tobago.renderkit.css.CssItem;
 import org.apache.myfaces.tobago.renderkit.css.TobagoClass;
+import org.apache.myfaces.tobago.renderkit.html.Arias;
 import org.apache.myfaces.tobago.renderkit.html.DataAttributes;
 import org.apache.myfaces.tobago.renderkit.html.HtmlAttributes;
 import org.apache.myfaces.tobago.renderkit.html.HtmlElements;
@@ -48,7 +49,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
   @Override
   protected CssItem[] getComponentCss(final FacesContext facesContext, final T component) {
     final boolean inline = component.isInline();
-    return inline ? new CssItem[]{BootstrapClass.LIST_GROUP} : null;
+    return inline ? new CssItem[]{BootstrapClass.LIST_GROUP} : new CssItem[]{BootstrapClass.DROPDOWN};
   }
 
   @Override
@@ -165,10 +166,14 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.writeClassAttribute(
       BootstrapClass.FORM_SELECT,
       TobagoClass.FILTER__WRAPPER,
-      inline ? BootstrapClass.LIST_GROUP_ITEM : null,
+      inline ? BootstrapClass.LIST_GROUP_ITEM : BootstrapClass.DROPDOWN_TOGGLE,
       BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
       component.getCustomClass());
     writer.writeAttribute(HtmlAttributes.TITLE, title, true);
+    writer.writeAttribute(DataAttributes.BS_TOGGLE, "dropdown", false);
+    writer.writeAttribute(DataAttributes.BS_AUTO_CLOSE, "outside", false);
+    writer.writeAttribute(DataAttributes.BS_REFERENCE, "parent", false);
+    writer.writeAttribute(Arias.EXPANDED, Boolean.FALSE.toString(), false);
 
     final Object[] values = component.getSelectedValues();
     final String[] submittedValues = getSubmittedValues(component);
