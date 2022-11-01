@@ -34,7 +34,8 @@ public class SelectManyController implements Serializable {
   private AstroData astroData;
 
   private List<SolarObject> planets;
-  private SolarObject[] selectedPlanets = new SolarObject[0];
+  private SolarObject[] selectedPlanetsDropdown = new SolarObject[0];
+  private SolarObject[] selectedPlanetsInline = new SolarObject[0];
 
   @PostConstruct
   public void init() {
@@ -45,11 +46,19 @@ public class SelectManyController implements Serializable {
     return planets;
   }
 
-  public SolarObject[] getSelectedPlanets() {
-    return selectedPlanets;
+  public SolarObject[] getSelectedPlanetsDropdown() {
+    return selectedPlanetsDropdown;
   }
 
-  public void setSelectedPlanets(final SolarObject[] selectedPlanets) {
-    this.selectedPlanets = selectedPlanets;
+  public void setSelectedPlanetsDropdown(final SolarObject[] selectedPlanetsDropdown) {
+    this.selectedPlanetsDropdown = selectedPlanetsDropdown;
+  }
+
+  public SolarObject[] getSelectedPlanetsInline() {
+    return selectedPlanetsInline;
+  }
+
+  public void setSelectedPlanetsInline(SolarObject[] selectedPlanetsInline) {
+    this.selectedPlanetsInline = selectedPlanetsInline;
   }
 }

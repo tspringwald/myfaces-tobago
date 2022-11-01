@@ -107,12 +107,11 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
 
       writer.startElement(HtmlElements.TD);
       writer.writeAttribute(HtmlAttributes.VALUE, formattedValue, true);
-
       writer.writeText(item.getLabel());
       writer.endElement(HtmlElements.TD);
-      writer.startElement(HtmlElements.TD);
-      writer.writeText("dummy column");
-      writer.endElement(HtmlElements.TD);
+//      writer.startElement(HtmlElements.TD);
+//      writer.writeText("dummy column");
+//      writer.endElement(HtmlElements.TD);
       writer.endElement(HtmlElements.TR);
     }
 
@@ -174,7 +173,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final Object[] values = component.getSelectedValues();
     final String[] submittedValues = getSubmittedValues(component);
 
-    renderBadges(facesContext, values, submittedValues);
+    renderBadges(facesContext, submittedValues != null ? submittedValues : values);
 
     writer.startElement(HtmlElements.INPUT);
     writer.writeAttribute(HtmlAttributes.TYPE, HtmlInputTypes.TEXT);
@@ -186,21 +185,15 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.endElement(HtmlElements.DIV);
   }
 
-  private void renderBadges(FacesContext facesContext, Object[] values, String[] submittedValues) throws IOException {
+  private void renderBadges(FacesContext facesContext, Object[] values) throws IOException {
     final TobagoResponseWriter writer = getResponseWriter(facesContext);
 
-    if (submittedValues != null) {
-      for (String submittedValue : submittedValues) {
-        writer.startElement(HtmlElements.SPAN);
-        writer.writeClassAttribute(BootstrapClass.BADGE, BootstrapClass.TEXT_BG_PRIMARY);
-        writer.writeText(submittedValue);
-        writer.endElement(HtmlElements.SPAN);
-      }
-    } else if (values != null) {
+    if (values != null) {
       for (Object value : values) {
         writer.startElement(HtmlElements.SPAN);
         writer.writeClassAttribute(BootstrapClass.BADGE, BootstrapClass.TEXT_BG_PRIMARY);
-        writer.writeText(value.toString());
+        writer.writeAttribute(DataAttributes.VALUE, String.valueOf(value), true);
+        writer.writeText(String.valueOf(value));
         writer.endElement(HtmlElements.SPAN);
       }
     }

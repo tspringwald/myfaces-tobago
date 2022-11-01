@@ -22,13 +22,13 @@
                 xmlns:tc="http://myfaces.apache.org/tobago/component"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <tc:selectMany value="#{selectManyController.selectedPlanets}" filter="contains">
+  <tc:selectMany id="dropdown" value="#{selectManyController.selectedPlanetsDropdown}" filter="contains">
     <tc:selectItems value="#{selectManyController.planets}"
                     var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
   </tc:selectMany>
 
   inline:
-  <tc:selectMany value="#{selectManyController.selectedPlanets}" filter="contains" inline="true">
+  <tc:selectMany id="inline" value="#{selectManyController.selectedPlanetsInline}" filter="contains" inline="true">
     <tc:selectItems value="#{selectManyController.planets}"
                     var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
   </tc:selectMany>

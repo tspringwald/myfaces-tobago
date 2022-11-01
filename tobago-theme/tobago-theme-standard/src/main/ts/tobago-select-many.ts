@@ -25,8 +25,8 @@ class SelectMany extends HTMLElement {
     super();
   }
 
-  get hiddenSelect(): HTMLScriptElement {
-    return this.root.querySelector(`select[name='${this.id}']`);
+  get hiddenSelect(): HTMLSelectElement {
+    return this.querySelector("select");
   }
 
   get selectField(): HTMLDivElement {
@@ -38,15 +38,12 @@ class SelectMany extends HTMLElement {
   }
 
   get dropdownMenu(): HTMLDivElement {
-    return this.root.querySelector(`.dropdown-menu[name='${this.id}']`);
+    return this.querySelector(".dropdown-menu");
   }
 
   get menuStore(): HTMLDivElement {
-    return this.root.querySelector(".tobago-page-menuStore");
-  }
-
-  get root(): ShadowRoot | Document {
-    return this.getRootNode() as ShadowRoot | Document;
+    const root = this.getRootNode() as ShadowRoot | Document;
+    return root.querySelector(".tobago-page-menuStore");
   }
 
   get tbody(): HTMLElement {
@@ -61,27 +58,52 @@ class SelectMany extends HTMLElement {
 
     this.selectField.addEventListener("click", this.showDropdownMenu.bind(this));
 
+    // todo: later
+    // this.hiddenSelect.addEventListener("change", ((event: InputEvent) => {
+    //   const select = <HTMLSelectElement>event.currentTarget;
+    //   select.querySelectorAll("option").forEach((option =>
+    //     this.sync(option)).bind(this));
+    //   }).bind(this));
+
+    // this.hiddenSelect.classList.remove("d-none");
+
     this.initList();
   }
 
   select(event: MouseEvent) {
     const target = <HTMLElement>event.target;
     const row = target.closest("tr");
-    row.classList.toggle("table-primary");
     const itemValue = row.dataset.tobagoValue;
     console.info("itemValue", itemValue);
-    if (row.classList.contains("table-primary")) {
-      const badge = this.getRowTemplate(itemValue, row.innerText);
-      console.info("badge", badge);
-      this.filterInput.insertAdjacentHTML("beforebegin", badge);
+    const select = this.hiddenSelect;
+    const option: HTMLOptionElement = select.querySelector(`[value="${itemValue}"]`);
+    option.selected = !option.selected;
+    this.sync(option);
+  }
+
+  sync(option: HTMLOptionElement) {
+    console.log("this", this);
+    console.log("option", option);
+    console.log("ds", option.value);
+    const itemValue = option.value;
+    console.log("itemValue", itemValue);
+    const row: HTMLTableRowElement = this.tbody.querySelector(`[data-tobago-value="${itemValue}"]`);
+    console.log("row", row);
+    if (option.selected) {
+      // create badge
+      this.filterInput.insertAdjacentHTML("beforebegin", this.getRowTemplate(itemValue, row.innerText));
+      // highlight list row
+      row.classList.add("table-active");
     } else {
-      const selectors = `.badge[data-tobago-value="${itemValue}"]`;
-      console.info("selectors", selectors);
-      this.selectField.querySelector(selectors).remove();
+      // remove badge
+      const selectField1 = this.selectField;
+      console.log("selectField1", selectField1);
+      selectField1.querySelector(`[data-tobago-value="${itemValue}"]`).remove();
+      // remove highlight list row
     }
   }
 
-  getRowTemplate(value: string, text: string) : string {
+  getRowTemplate(value: string, text: string): string {
     return `<span class="badge text-bg-primary" data-tobago-value="${value}">${text}</span>`;
   }
 
