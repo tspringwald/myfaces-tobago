@@ -65,19 +65,14 @@ class SelectMany extends HTMLElement {
     this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.hideDropdown.bind(this));
     this.addEventListener(BootstrapEvents.DROPDOWN_HIDDEN, this.HiddenDropdown.bind(this));
 
-    // todo: later
-    // this.hiddenSelect.addEventListener("change", ((event: InputEvent) => {
-    //   const select = <HTMLSelectElement>event.currentTarget;
-    //   select.querySelectorAll("option").forEach((option =>
-    //     this.sync(option)).bind(this));
-    //   }).bind(this));
-
-    // this.hiddenSelect.classList.remove("d-none");
+    this.querySelectorAll("option:checked").forEach(
+      option => this.sync(<HTMLOptionElement>option)
+    );
 
     this.initList();
   }
 
-  select(event: MouseEvent) {
+  select(event: MouseEvent): void {
     const target = <HTMLElement>event.target;
     const row = target.closest("tr");
     const itemValue = row.dataset.tobagoValue;
@@ -85,6 +80,16 @@ class SelectMany extends HTMLElement {
     const select = this.hiddenSelect;
     const option: HTMLOptionElement = select.querySelector(`[value="${itemValue}"]`);
     option.selected = !option.selected;
+    this.sync(option);
+  }
+
+  removeBadge(event: MouseEvent): void {
+    const target = <HTMLElement>event.target;
+    const group: HTMLElement = target.closest(".btn-group");
+    const itemValue = group.dataset.tobagoValue;
+    const select = this.hiddenSelect;
+    const option: HTMLOptionElement = select.querySelector(`[value="${itemValue}"]`);
+    option.selected = false;
     this.sync(option);
   }
 
@@ -99,6 +104,11 @@ class SelectMany extends HTMLElement {
     if (option.selected) {
       // create badge
       this.filterInput.insertAdjacentHTML("beforebegin", this.getRowTemplate(itemValue, row.innerText));
+
+      // todo: nicer adding the @click with lit-html
+      const current = this.filterInput.parentElement.querySelector(".btn-group[data-tobago-value='"+ itemValue +"']");
+      current.addEventListener("click", this.removeBadge.bind(this));
+
       // highlight list row
       row.classList.add("table-active");
     } else {
@@ -106,16 +116,22 @@ class SelectMany extends HTMLElement {
       const selectField1 = this.selectField;
       console.log("selectField1", selectField1);
       selectField1.querySelector(`[data-tobago-value="${itemValue}"]`).remove();
+
       // remove highlight list row
+      row.classList.remove("table-active");
     }
   }
 
   getRowTemplate(value: string, text: string): string {
-    return `<span class="badge text-bg-primary" data-tobago-value="${value}">${text}</span>`;
+    return `
+<span class="btn-group" role="group" data-tobago-value="${value}">
+  <span class="btn badge text-bg-primary">${text}</span>
+  <button type="button" class="btn badge btn-secondary"><i class="bi-x-lg"></i></button>
+</span>`;
   }
 
   private showDropdownMenu(event: MouseEvent): void {
-    this.dropdownMenu.classList.add(this.CssClass.SHOW);
+    this.dropdownMenu?.classList.add(this.CssClass.SHOW);
   }
 
   private showDropdown(event: Event): void {

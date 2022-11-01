@@ -178,8 +178,6 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final Object[] values = component.getSelectedValues();
     final String[] submittedValues = getSubmittedValues(component);
 
-    renderBadges(facesContext, submittedValues != null ? submittedValues : values);
-
     writer.startElement(HtmlElements.INPUT);
     writer.writeAttribute(HtmlAttributes.TYPE, HtmlInputTypes.TEXT);
     writer.writeIdAttribute(filterId);
@@ -188,20 +186,6 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.endElement(HtmlElements.INPUT);
 
     writer.endElement(HtmlElements.DIV);
-  }
-
-  private void renderBadges(FacesContext facesContext, Object[] values) throws IOException {
-    final TobagoResponseWriter writer = getResponseWriter(facesContext);
-
-    if (values != null) {
-      for (Object value : values) {
-        writer.startElement(HtmlElements.SPAN);
-        writer.writeClassAttribute(BootstrapClass.BADGE, BootstrapClass.TEXT_BG_PRIMARY);
-        writer.writeAttribute(DataAttributes.VALUE, String.valueOf(value), true);
-        writer.writeText(String.valueOf(value));
-        writer.endElement(HtmlElements.SPAN);
-      }
-    }
   }
 
   @Override
