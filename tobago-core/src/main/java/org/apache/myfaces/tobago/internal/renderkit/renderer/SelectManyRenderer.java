@@ -164,15 +164,16 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.writeNameAttribute(clientId);
     HtmlRendererUtils.writeDataAttributes(facesContext, writer, component);
     writer.writeClassAttribute(
-      BootstrapClass.FORM_SELECT,
+      inline ? BootstrapClass.FORM_CONTROL : BootstrapClass.FORM_SELECT,
       TobagoClass.FILTER__WRAPPER,
       inline ? BootstrapClass.LIST_GROUP_ITEM : BootstrapClass.DROPDOWN_TOGGLE,
       BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
       component.getCustomClass());
     writer.writeAttribute(HtmlAttributes.TITLE, title, true);
-    writer.writeAttribute(DataAttributes.BS_TOGGLE, "dropdown", false);
-    writer.writeAttribute(DataAttributes.BS_AUTO_CLOSE, "outside", false);
-    writer.writeAttribute(DataAttributes.BS_REFERENCE, "parent", false);
+    if (!inline) {
+      writer.writeAttribute(DataAttributes.BS_TOGGLE, "dropdown", false);
+      writer.writeAttribute(DataAttributes.BS_AUTO_CLOSE, "outside", false);
+    }
     writer.writeAttribute(Arias.EXPANDED, Boolean.FALSE.toString(), false);
 
     final Object[] values = component.getSelectedValues();

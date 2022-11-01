@@ -1182,7 +1182,11 @@ tobago-select-many {
     flex-wrap: wrap;
     align-items: center;
 
-    &.list-group-item.form-select {
+    &.dropdown-toggle::after {
+      content: none;
+    }
+
+    &.list-group-item.form-control {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
 
