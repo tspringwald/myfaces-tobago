@@ -22,16 +22,35 @@
                 xmlns:tc="http://myfaces.apache.org/tobago/component"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <tc:selectMany id="dropdown" value="#{selectManyController.selectedPlanetsDropdown}" filter="contains">
-    <tc:selectItems value="#{selectManyController.planets}"
-                    var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
-  </tc:selectMany>
+  <tc:section label="not inline / no filter">
+    <tc:selectMany id="selected1" value="#{selectManyController.selected1}">
+      <tc:selectItems value="#{selectManyController.planets}"
+                      var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
+    </tc:selectMany>
+  </tc:section>
 
-  inline:
-  <tc:selectMany id="inline" value="#{selectManyController.selectedPlanetsInline}" filter="contains" inline="true">
-    <tc:selectItems value="#{selectManyController.planets}"
-                    var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
-  </tc:selectMany>
-  <tc:button label="Submit"/>
+  <tc:section label="inline / no filter">
+    <tc:selectMany id="selected2" value="#{selectManyController.selected2}" inline="true">
+      <tc:selectItems value="#{selectManyController.planets}"
+                      var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
+    </tc:selectMany>
+    <tc:button label="Submit"/>
+  </tc:section>
+
+  <tc:section label="not inline / with filter">
+    <tc:selectMany id="selected3" value="#{selectManyController.selected3}" filter="contains">
+      <tc:selectItems value="#{selectManyController.planets}"
+                      var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
+    </tc:selectMany>
+    <tc:button label="Submit"/>
+  </tc:section>
+
+  <tc:section label="inline / with filter:">
+    <tc:selectMany id="selected4" value="#{selectManyController.selected4}" filter="contains" inline="true">
+      <tc:selectItems value="#{selectManyController.planets}"
+                      var="planet" itemLabel="#{planet.name}" itemValue="#{planet}"/>
+    </tc:selectMany>
+    <tc:button label="Submit"/>
+  </tc:section>
 
 </ui:composition>

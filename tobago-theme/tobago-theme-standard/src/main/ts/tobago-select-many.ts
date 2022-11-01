@@ -16,6 +16,7 @@
  */
 
 import {BootstrapEvents} from "./BootstrapEvents";
+import {TobagoFilterRegistry} from "./tobago-filter-registry";
 
 class SelectMany extends HTMLElement {
 
@@ -33,6 +34,10 @@ class SelectMany extends HTMLElement {
 
   get selectField(): HTMLDivElement {
     return this.querySelector(".tobago-filter-wrapper");
+  }
+
+  get filter(): string {
+    return this.getAttribute("filter");
   }
 
   get filterInput(): HTMLInputElement {
@@ -65,11 +70,18 @@ class SelectMany extends HTMLElement {
     this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.hideDropdown.bind(this));
     this.addEventListener(BootstrapEvents.DROPDOWN_HIDDEN, this.HiddenDropdown.bind(this));
 
+    // init badges
     this.querySelectorAll("option:checked").forEach(
       option => this.sync(<HTMLOptionElement>option)
     );
 
     this.initList();
+
+    // init filter
+    if (this.filter != null) {
+      const input = this.filterInput;
+      input.addEventListener("keyup", this.filterEvent.bind(this));
+    }
   }
 
   select(event: MouseEvent): void {
@@ -128,6 +140,24 @@ class SelectMany extends HTMLElement {
   <span class="btn badge text-bg-primary">${text}</span>
   <button type="button" class="btn badge btn-secondary"><i class="bi-x-lg"></i></button>
 </span>`;
+  }
+
+  filterEvent(event: Event): void {
+    const input = event.currentTarget as HTMLInputElement;
+    const searchString = input.value;
+    console.info("searchString", searchString);
+    const filterFunction = TobagoFilterRegistry.get(this.filter);
+    // XXX todo: if filterFunction not found?
+    if (filterFunction != null) {
+      this.querySelectorAll("tr").forEach(row => {
+        const itemValue = row.dataset.tobagoValue;
+        if (filterFunction(itemValue.toLowerCase(), searchString)) {
+          row.classList.remove("d-none");
+        } else {
+          row.classList.add("d-none");
+        }
+      });
+    }
   }
 
   private showDropdownMenu(event: MouseEvent): void {

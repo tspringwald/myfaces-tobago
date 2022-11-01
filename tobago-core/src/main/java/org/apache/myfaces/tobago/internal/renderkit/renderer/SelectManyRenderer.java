@@ -28,6 +28,7 @@ import org.apache.myfaces.tobago.renderkit.css.BootstrapClass;
 import org.apache.myfaces.tobago.renderkit.css.CssItem;
 import org.apache.myfaces.tobago.renderkit.css.TobagoClass;
 import org.apache.myfaces.tobago.renderkit.html.Arias;
+import org.apache.myfaces.tobago.renderkit.html.CustomAttributes;
 import org.apache.myfaces.tobago.renderkit.html.DataAttributes;
 import org.apache.myfaces.tobago.renderkit.html.HtmlAttributes;
 import org.apache.myfaces.tobago.renderkit.html.HtmlElements;
@@ -121,6 +122,12 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.endElement(HtmlElements.DIV);
   }
 
+  @Override
+  protected void writeAdditionalAttributes(FacesContext facesContext, TobagoResponseWriter writer, T input) throws IOException {
+    super.writeAdditionalAttributes(facesContext, writer, input);
+    writer.writeAttribute(CustomAttributes.FILTER, input.getFilter(), true);
+  }
+
   private void renderHiddenSelect(FacesContext facesContext, T component) throws IOException {
     final TobagoResponseWriter writer = getResponseWriter(facesContext);
 
@@ -176,14 +183,15 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     }
     writer.writeAttribute(Arias.EXPANDED, Boolean.FALSE.toString(), false);
 
-    final Object[] values = component.getSelectedValues();
-    final String[] submittedValues = getSubmittedValues(component);
-
     writer.startElement(HtmlElements.INPUT);
     writer.writeAttribute(HtmlAttributes.TYPE, HtmlInputTypes.TEXT);
     writer.writeIdAttribute(filterId);
     writer.writeClassAttribute(TobagoClass.FILTER, BootstrapClass.FORM_CONTROL);
     writer.writeAttribute(HtmlAttributes.AUTOCOMPLETE, "off", false);
+
+    // todo: check real readonly
+    writer.writeAttribute(HtmlAttributes.READONLY, filter == null);
+
     writer.endElement(HtmlElements.INPUT);
 
     writer.endElement(HtmlElements.DIV);

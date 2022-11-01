@@ -34,8 +34,10 @@ public class SelectManyController implements Serializable {
   private AstroData astroData;
 
   private List<SolarObject> planets;
-  private SolarObject[] selectedPlanetsDropdown = new SolarObject[0];
-  private SolarObject[] selectedPlanetsInline = new SolarObject[0];
+  private SolarObject[] selected1 = new SolarObject[0];
+  private SolarObject[] selected2 = new SolarObject[0];
+  private SolarObject[] selected3 = new SolarObject[0];
+  private SolarObject[] selected4 = new SolarObject[0];
 
   @PostConstruct
   public void init() {
@@ -46,19 +48,35 @@ public class SelectManyController implements Serializable {
     return planets;
   }
 
-  public SolarObject[] getSelectedPlanetsDropdown() {
-    return selectedPlanetsDropdown;
+  public SolarObject[] getSelected1() {
+    return selected1;
   }
 
-  public void setSelectedPlanetsDropdown(final SolarObject[] selectedPlanetsDropdown) {
-    this.selectedPlanetsDropdown = selectedPlanetsDropdown;
+  public void setSelected1(SolarObject[] selected1) {
+    this.selected1 = selected1;
   }
 
-  public SolarObject[] getSelectedPlanetsInline() {
-    return selectedPlanetsInline;
+  public SolarObject[] getSelected2() {
+    return selected2;
   }
 
-  public void setSelectedPlanetsInline(SolarObject[] selectedPlanetsInline) {
-    this.selectedPlanetsInline = selectedPlanetsInline;
+  public void setSelected2(SolarObject[] selected2) {
+    this.selected2 = selected2;
+  }
+
+  public SolarObject[] getSelected3() {
+    return selected3;
+  }
+
+  public void setSelected3(SolarObject[] selected3) {
+    this.selected3 = selected3;
+  }
+
+  public SolarObject[] getSelected4() {
+    return selected4;
+  }
+
+  public void setSelected4(SolarObject[] selected4) {
+    this.selected4 = selected4;
   }
 }
