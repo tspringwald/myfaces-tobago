@@ -123,7 +123,8 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
   }
 
   @Override
-  protected void writeAdditionalAttributes(FacesContext facesContext, TobagoResponseWriter writer, T input) throws IOException {
+  protected void writeAdditionalAttributes(FacesContext facesContext, TobagoResponseWriter writer, T input)
+      throws IOException {
     super.writeAdditionalAttributes(facesContext, writer, input);
     writer.writeAttribute(CustomAttributes.FILTER, input.getFilter(), true);
   }
