@@ -15,20 +15,21 @@
  * limitations under the License.
  */
 
+import {MenuStore} from "./tobago-menu-store";
 import {BootstrapEvents} from "./BootstrapEvents";
+
+const TobagoDropdownEvent = {
+  HIDE: "tobago.dropdown.hide",
+  HIDDEN: "tobago.dropdown.hidden",
+  SHOW: "tobago.dropdown.show",
+  SHOWN: "tobago.dropdown.shown"
+};
 
 /**
  * The dropdown implementation of Bootstrap does not move the menu to the tobago-page-menuStore. This behavior is
  * implemented in this class.
  */
 class Dropdown extends HTMLElement {
-
-  private readonly TobagoEvents = {
-    HIDE: "tobago.dropdown.hide",
-    HIDDEN: "tobago.dropdown.hidden",
-    SHOW: "tobago.dropdown.show",
-    SHOWN: "tobago.dropdown.shown"
-  };
 
   constructor() {
     super();
@@ -48,7 +49,7 @@ class Dropdown extends HTMLElement {
     this.dispatchEvent(new CustomEvent(this.TobagoEvents.SHOW));
 
     if (!this.insideNavbar()) {
-      this.menuStore.appendChild(this.dropdownMenu);
+      MenuStore.appendChild(this.dropdownMenu);
     }
 
     this.dispatchEvent(new CustomEvent(this.TobagoEvents.SHOWN));
@@ -74,11 +75,6 @@ class Dropdown extends HTMLElement {
   private get dropdownMenu(): HTMLDivElement {
     const root = this.getRootNode() as ShadowRoot | Document;
     return root.querySelector(`.dropdown-menu[name='${this.id}']`);
-  }
-
-  private get menuStore(): HTMLDivElement {
-    const root = this.getRootNode() as ShadowRoot | Document;
-    return root.querySelector(".tobago-page-menuStore");
   }
 }
 
