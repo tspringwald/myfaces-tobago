@@ -46,21 +46,21 @@ class Dropdown extends HTMLElement {
   }
 
   openDropdown(): void {
-    this.dispatchEvent(new CustomEvent(this.TobagoEvents.SHOW));
+    this.dispatchEvent(new CustomEvent(TobagoDropdownEvent.SHOW));
 
     if (!this.insideNavbar()) {
       MenuStore.appendChild(this.dropdownMenu);
     }
 
-    this.dispatchEvent(new CustomEvent(this.TobagoEvents.SHOWN));
+    this.dispatchEvent(new CustomEvent(TobagoDropdownEvent.SHOWN));
   }
 
   closeDropdown(): void {
-    this.dispatchEvent(new CustomEvent(this.TobagoEvents.HIDE));
+    this.dispatchEvent(new CustomEvent(TobagoDropdownEvent.HIDE));
     if (!this.insideNavbar()) {
       this.appendChild(this.dropdownMenu);
     }
-    this.dispatchEvent(new CustomEvent(this.TobagoEvents.HIDDEN));
+    this.dispatchEvent(new CustomEvent(TobagoDropdownEvent.HIDDEN));
   }
 
   /**
