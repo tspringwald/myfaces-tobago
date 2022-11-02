@@ -18,18 +18,18 @@
 import {MenuStore} from "./tobago-menu-store";
 import {BootstrapEvents} from "./BootstrapEvents";
 
+const TobagoDropdownEvent = {
+  HIDE: "tobago.dropdown.hide",
+  HIDDEN: "tobago.dropdown.hidden",
+  SHOW: "tobago.dropdown.show",
+  SHOWN: "tobago.dropdown.shown"
+};
+
 /**
  * The dropdown implementation of Bootstrap does not move the menu to the tobago-page-menuStore. This behavior is
  * implemented in this class.
  */
 class Dropdown extends HTMLElement {
-
-  private readonly TobagoEvents = {
-    HIDE: "tobago.dropdown.hide",
-    HIDDEN: "tobago.dropdown.hidden",
-    SHOW: "tobago.dropdown.show",
-    SHOWN: "tobago.dropdown.shown"
-  };
 
   constructor() {
     super();
