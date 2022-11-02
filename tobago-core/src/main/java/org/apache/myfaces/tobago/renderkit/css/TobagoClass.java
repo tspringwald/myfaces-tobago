@@ -54,6 +54,7 @@ public enum TobagoClass implements CssItem {
   EXPANDED("tobago-expanded"),
 //  FILE("tobago-file"),
 //  FIGURE("tobago-figure"),
+  FOCUS("tobago-focus"),
   FOLDER("tobago-folder"),
   FILTER("tobago-filter"),
   FILTER__WRAPPER("tobago-filter-wrapper"),

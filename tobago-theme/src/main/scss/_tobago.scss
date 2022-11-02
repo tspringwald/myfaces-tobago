@@ -118,6 +118,20 @@ $tobago-flex-layout-spacing: 0.5rem;
   }
 }
 
+@mixin formControlFocus() {
+  //_form-control:focus from bootstrap
+  color: $input-focus-color;
+  background-color: $input-focus-bg;
+  border-color: $input-focus-border-color;
+  outline: 0;
+  @if $enable-shadows {
+    @include box-shadow($input-box-shadow, $input-focus-box-shadow);
+  } @else {
+    // Avoid using mixin so we can pass custom focus shadow properly
+    box-shadow: $input-focus-box-shadow;
+  }
+}
+
 @mixin formControlSelectListDisabled() {
   &:disabled option, option:disabled {
     color: rgba($input-color, $tobago-form-disabled-alpha);
@@ -1176,6 +1190,23 @@ tobago-select-one-radio {
 
 tobago-select-many {
   display: block;
+
+  &.list-group {
+    .tobago-options {
+      border-top: ($table-border-width * 2) solid $table-group-separator-color;
+      overflow: auto;
+    }
+  }
+
+  &.tobago-focus {
+    &.dropdown .tobago-filter-wrapper {
+      @include formControlFocus();
+    }
+
+    &.list-group {
+      @include formControlFocus();
+    }
+  }
 
   .tobago-filter-wrapper {
     display: flex;
