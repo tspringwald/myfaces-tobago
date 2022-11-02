@@ -24,6 +24,10 @@ class SelectMany extends HTMLElement {
     SHOW: "show"
   };
 
+  private readonly Key = {
+    ESCAPE: "Escape"
+  };
+
   constructor() {
     super();
   }
@@ -65,9 +69,11 @@ class SelectMany extends HTMLElement {
     // todo: implement remove badge
 
     window.addEventListener("resize", this.resizeEvent.bind(this));
+    document.addEventListener("click", this.clickEvent.bind(this));
+    document.addEventListener("keydown", this.keydownEvent.bind(this));
     this.addEventListener(BootstrapEvents.DROPDOWN_SHOW, this.showDropdown.bind(this));
     this.addEventListener(BootstrapEvents.DROPDOWN_SHOWN, this.shownDropdown.bind(this));
-    this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.hideDropdown.bind(this));
+    this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.preventBootstrapHide.bind(this));
     this.addEventListener(BootstrapEvents.DROPDOWN_HIDDEN, this.HiddenDropdown.bind(this));
 
     // init badges
@@ -118,7 +124,7 @@ class SelectMany extends HTMLElement {
       this.filterInput.insertAdjacentHTML("beforebegin", this.getRowTemplate(itemValue, row.innerText));
 
       // todo: nicer adding the @click with lit-html
-      const current = this.filterInput.parentElement.querySelector(".btn-group[data-tobago-value='"+ itemValue +"']");
+      const current = this.filterInput.parentElement.querySelector(".btn-group[data-tobago-value='" + itemValue + "']");
       current.addEventListener("click", this.removeBadge.bind(this));
 
       // highlight list row
@@ -173,8 +179,34 @@ class SelectMany extends HTMLElement {
     // console.log("### shownDropdown");
   }
 
-  private hideDropdown(event: Event): void {
-    // console.log("### hideDropdown");
+  private preventBootstrapHide(event: CustomEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  private clickEvent(event: MouseEvent): void {
+    console.log("click auf this?");
+    event.composedPath().forEach(
+
+      (value, index, array) => {
+        if(value === this) {
+          console.log("yo");
+          return;
+        }
+        console.log("ding!");
+    });
+
+    console.log(`### clickEvent ${event.relatedTarget} ${event.target} ${event.currentTarget}`);
+  }
+
+  private keydownEvent(event: KeyboardEvent) {
+    if (event.key === this.Key.ESCAPE) {
+      this.hideDropdown();
+    }
+  }
+
+  private hideDropdown(): void {
+    console.log("### hideDropdown");
   }
 
   private HiddenDropdown(event: Event): void {

@@ -180,7 +180,6 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.writeAttribute(HtmlAttributes.TITLE, title, true);
     if (!inline) {
       writer.writeAttribute(DataAttributes.BS_TOGGLE, "dropdown", false);
-      writer.writeAttribute(DataAttributes.BS_AUTO_CLOSE, "outside", false);
     }
     writer.writeAttribute(Arias.EXPANDED, Boolean.FALSE.toString(), false);
 
