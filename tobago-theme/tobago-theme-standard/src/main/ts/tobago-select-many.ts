@@ -21,7 +21,9 @@ import {TobagoFilterRegistry} from "./tobago-filter-registry";
 class SelectMany extends HTMLElement {
 
   private readonly CssClass = {
-    SHOW: "show"
+    DROPDOWN_MENU: "dropdown-menu",
+    SHOW: "show",
+    TOBAGO_OPTIONS: "tobago-options"
   };
 
   private readonly Key = {
@@ -68,13 +70,15 @@ class SelectMany extends HTMLElement {
     // todo: implement select/deselect options
     // todo: implement remove badge
 
-    window.addEventListener("resize", this.resizeEvent.bind(this));
-    document.addEventListener("click", this.clickEvent.bind(this));
-    document.addEventListener("keydown", this.keydownEvent.bind(this));
-    this.addEventListener(BootstrapEvents.DROPDOWN_SHOW, this.showDropdown.bind(this));
-    this.addEventListener(BootstrapEvents.DROPDOWN_SHOWN, this.shownDropdown.bind(this));
-    this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.preventBootstrapHide.bind(this));
-    this.addEventListener(BootstrapEvents.DROPDOWN_HIDDEN, this.HiddenDropdown.bind(this));
+    if (this.dropdownMenu) {
+      window.addEventListener("resize", this.resizeEvent.bind(this));
+      document.addEventListener("click", this.clickEvent.bind(this));
+      document.addEventListener("keydown", this.keydownEvent.bind(this));
+      this.addEventListener(BootstrapEvents.DROPDOWN_SHOW, this.showDropdown.bind(this));
+      this.addEventListener(BootstrapEvents.DROPDOWN_SHOWN, this.shownDropdown.bind(this));
+      this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.preventBootstrapHide.bind(this));
+      this.addEventListener(BootstrapEvents.DROPDOWN_HIDDEN, this.hiddenDropdown.bind(this));
+    }
 
     // init badges
     this.querySelectorAll("option:checked").forEach(
@@ -166,17 +170,13 @@ class SelectMany extends HTMLElement {
     }
   }
 
-  private showDropdownMenu(event: MouseEvent): void {
-    this.dropdownMenu?.classList.add(this.CssClass.SHOW);
-  }
-
   private showDropdown(event: Event): void {
-    // console.log("### showDropdown");
+    console.log("### showDropdown");
   }
 
   private shownDropdown(event: Event): void {
     this.setDropdownMenuWidth();
-    // console.log("### shownDropdown");
+    console.log("### shownDropdown");
   }
 
   private preventBootstrapHide(event: CustomEvent): void {
@@ -185,32 +185,40 @@ class SelectMany extends HTMLElement {
   }
 
   private clickEvent(event: MouseEvent): void {
-    console.log("click auf this?");
-    event.composedPath().forEach(
+    let hide = true;
 
-      (value, index, array) => {
-        if(value === this) {
-          console.log("yo");
-          return;
-        }
-        console.log("ding!");
-    });
+    for (const element of event.composedPath() as HTMLElement[]) {
+      if (this.id === element.id
+        || (element.classList?.contains(this.CssClass.DROPDOWN_MENU)
+          && this.id === element.getAttribute("name"))) {
+        hide = false;
+        break;
+      }
+    }
 
-    console.log(`### clickEvent ${event.relatedTarget} ${event.target} ${event.currentTarget}`);
+    if (hide) {
+      this.hideDropdown();
+    }
   }
 
   private keydownEvent(event: KeyboardEvent) {
+    console.log("### keydownEvent");
     if (event.key === this.Key.ESCAPE) {
       this.hideDropdown();
     }
   }
 
   private hideDropdown(): void {
-    console.log("### hideDropdown");
+    if (this.dropdownMenu?.classList.contains(this.CssClass.SHOW)) {
+      this.selectField.classList.remove(this.CssClass.SHOW);
+      this.selectField.ariaExpanded = "false";
+      this.dropdownMenu.classList.remove(this.CssClass.SHOW);
+      console.log("### hideDropdown");
+    }
   }
 
-  private HiddenDropdown(event: Event): void {
-    // console.log("### HiddenDropdown");
+  private hiddenDropdown(event: Event): void {
+    console.log("### hiddenDropdown");
   }
 
   private resizeEvent(event: UIEvent): void {
