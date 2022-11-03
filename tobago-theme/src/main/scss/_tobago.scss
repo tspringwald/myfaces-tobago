@@ -1199,7 +1199,7 @@ tobago-select-many {
   }
 
   &.tobago-focus {
-    &.dropdown .tobago-filter-wrapper {
+    &.dropdown .tobago-select-field {
       @include formControlFocus();
     }
 
@@ -1208,7 +1208,7 @@ tobago-select-many {
     }
   }
 
-  .tobago-filter-wrapper {
+  .tobago-select-field {
     display: flex;
     flex-wrap: wrap;
     align-items: center;

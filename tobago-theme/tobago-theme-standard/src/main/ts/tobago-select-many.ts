@@ -40,7 +40,7 @@ class SelectMany extends HTMLElement {
   }
 
   get selectField(): HTMLDivElement {
-    return this.querySelector(".tobago-filter-wrapper");
+    return this.querySelector(".tobago-select-field");
   }
 
   get badgeCloseButtons(): NodeListOf<HTMLButtonElement> {

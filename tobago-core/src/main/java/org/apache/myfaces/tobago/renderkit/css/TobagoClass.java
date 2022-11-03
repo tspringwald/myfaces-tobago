@@ -57,7 +57,6 @@ public enum TobagoClass implements CssItem {
   FOCUS("tobago-focus"),
   FOLDER("tobago-folder"),
   FILTER("tobago-filter"),
-  FILTER__WRAPPER("tobago-filter-wrapper"),
   HEADER("tobago-header"),
 //  IMAGE("tobago-image"),
   // tbd: can be removed?
@@ -84,6 +83,7 @@ public enum TobagoClass implements CssItem {
   REQUIRED("tobago-required"),
   RESIZE("tobago-resize"),
   SECTION__CONTENT("tobago-section-content"),
+  SELECT__FIELD("tobago-select-field"),
   SELECT_MANY_LISTBOX__OPTION("tobago-selectManyListbox-option"),
 //  SELECT_MANY_SHUTTLE("tobago-selectManyShuttle"),
 //  SELECT_MANY_SHUTTLE__ADD("tobago-selectManyShuttle-add"),

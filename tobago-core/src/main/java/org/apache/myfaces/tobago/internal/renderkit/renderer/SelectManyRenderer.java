@@ -124,7 +124,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
 
   @Override
   protected void writeAdditionalAttributes(FacesContext facesContext, TobagoResponseWriter writer, T input)
-      throws IOException {
+    throws IOException {
     super.writeAdditionalAttributes(facesContext, writer, input);
     writer.writeAttribute(CustomAttributes.FILTER, input.getFilter(), true);
   }
@@ -173,7 +173,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     HtmlRendererUtils.writeDataAttributes(facesContext, writer, component);
     writer.writeClassAttribute(
       inline ? BootstrapClass.FORM_CONTROL : BootstrapClass.FORM_SELECT,
-      TobagoClass.FILTER__WRAPPER,
+      TobagoClass.SELECT__FIELD,
       inline ? BootstrapClass.LIST_GROUP_ITEM : BootstrapClass.DROPDOWN_TOGGLE,
       BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
       component.getCustomClass());
