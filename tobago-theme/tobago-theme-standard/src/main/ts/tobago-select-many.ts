@@ -169,8 +169,8 @@ class SelectMany extends HTMLElement {
   getRowTemplate(value: string, text: string): string {
     return `
 <span class="btn-group" role="group" data-tobago-value="${value}">
-  <span class="btn badge text-bg-primary">${text}</span>
-  <button type="button" class="btn badge btn-secondary"><i class="bi-x-lg"></i></button>
+  <tobago-badge class="badge text-bg-primary btn">${text}</tobago-badge>
+  <button type="button" class="tobago-button btn btn-secondary badge"><i class="bi-x-lg"></i></button>
 </span>`;
   }
 

@@ -1222,12 +1222,12 @@ tobago-select-many {
       padding: $form-select-padding-y $form-select-indicator-padding $form-select-padding-y $form-select-padding-x;
     }
 
-    .badge + .tobago-filter {
+    .btn-group + .tobago-filter {
       margin-left: 0.25rem;
     }
 
-    .badge {
-      margin: 0.125rem;
+    .btn-group {
+      margin-right: 0.25rem;
     }
 
     .tobago-filter {
