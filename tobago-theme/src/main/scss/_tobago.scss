@@ -66,18 +66,9 @@ $tobago-flex-layout-spacing: 0.5rem;
   }
 }
 
-@mixin badge() {
-  &.badge {
-    @each $color, $value in $theme-colors {
-      &.bg-#{$color}, &.btn-#{$color} {
-        // set text color to make sure there is no white text on white background
-        color: color-contrast($value);
-      }
-    }
-
-    &.btn {
-      border: 0; //badge have no border; a button with markup badge should also have no border
-    }
+@mixin badgeBtn() {
+  &.badge.btn {
+    --#{$prefix}btn-border-width: 0; //badge have no border; a button with markup badge should also have no border
   }
 }
 
@@ -191,7 +182,7 @@ $tobago-flex-layout-spacing: 0.5rem;
 }
 
 tobago-badge {
-  @include badge();
+  @include badgeBtn();
 
   &.btn {
     cursor: initial; //revert cursor attribute on .btn class
@@ -258,11 +249,18 @@ tobago-box {
   }
 }
 
-/* button, link ------------------------------------------------------- */
 .tobago-button {
   @include buttonLinkDisabledCursor();
   @include buttonLinkImageTextSpacing();
-  @include badge();
+  @include badgeBtn();
+
+  &.badge {
+    @each $color, $value in $theme-colors {
+      &.btn-#{$color} {
+        --#{$prefix}badge-color: #{color-contrast($value)};
+      }
+    }
+  }
 }
 
 /* button -------------------------------------------------------------- */
