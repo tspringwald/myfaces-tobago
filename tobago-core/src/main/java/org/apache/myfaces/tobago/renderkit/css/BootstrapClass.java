@@ -618,6 +618,7 @@ public enum BootstrapClass implements CssItem {
   TABLE_DARK("table-dark"),
   TABLE_HOVER("table-hover"),
   TABLE_INFO("table-info"),
+  TABLE_PRIMARY("table-primary"),
   TABLE_SM("table-sm"),
   TABLE_STRIPED("table-striped"),
   TOOLTIP_ARROW("tooltip-arrow"),

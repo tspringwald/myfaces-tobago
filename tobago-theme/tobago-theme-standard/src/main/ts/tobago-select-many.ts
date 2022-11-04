@@ -23,6 +23,8 @@ class SelectMany extends HTMLElement {
   private readonly CssClass = {
     DROPDOWN_MENU: "dropdown-menu",
     SHOW: "show",
+    TABLE_ACTIVE: "table-active",
+    TABLE_PRIMARY: "table-primary",
     TOBAGO_FOCUS: "tobago-focus",
     TOBAGO_OPTIONS: "tobago-options"
   };
@@ -144,7 +146,7 @@ class SelectMany extends HTMLElement {
       closeButton?.addEventListener("blur", this.blurEvent.bind(this));
 
       // highlight list row
-      row.classList.add("table-active");
+      row.classList.add(this.CssClass.TABLE_PRIMARY);
     } else {
       // remove badge
       const selectField1 = this.selectField;
@@ -159,7 +161,7 @@ class SelectMany extends HTMLElement {
       }
 
       // remove highlight list row
-      row.classList.remove("table-active");
+      row.classList.remove(this.CssClass.TABLE_PRIMARY);
     }
   }
 

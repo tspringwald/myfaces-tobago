@@ -116,7 +116,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
       writer.startElement(HtmlElements.TR);
       writer.writeAttribute(DataAttributes.VALUE, formattedValue, true);
       writer.writeClassAttribute(
-        contains ? BootstrapClass.TABLE_ACTIVE : null,
+        contains ? BootstrapClass.TABLE_PRIMARY : null,
         disabled || item.isDisabled() ? TobagoClass.DISABLED : null);
 
       writer.startElement(HtmlElements.TD);
