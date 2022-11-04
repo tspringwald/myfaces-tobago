@@ -39,6 +39,7 @@ import org.apache.myfaces.tobago.webapp.TobagoResponseWriter;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectManyRendererBase<T> {
@@ -50,7 +51,19 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
   @Override
   protected CssItem[] getComponentCss(final FacesContext facesContext, final T component) {
     final boolean inline = component.isInline();
-    return inline ? new CssItem[]{BootstrapClass.LIST_GROUP} : new CssItem[]{BootstrapClass.DROPDOWN};
+    final List<SelectItem> items = SelectItemUtils.getItemList(facesContext, component);
+    final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || component.isReadonly();
+
+    List<CssItem> cssItems = new ArrayList<>();
+    if (disabled) {
+      cssItems.add(TobagoClass.DISABLED);
+    }
+    if (inline) {
+      cssItems.add(BootstrapClass.LIST_GROUP);
+    } else {
+      cssItems.add(BootstrapClass.DROPDOWN);
+    }
+    return cssItems.toArray(new CssItem[0]);
   }
 
   @Override
@@ -73,7 +86,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final String title = HtmlRendererUtils.getTitleFromTipAndMessages(facesContext, component);
 
     renderHiddenSelect(facesContext, component);
-    renderFilterInput(facesContext, component);
+    renderSelectField(facesContext, component);
 
     writer.startElement(HtmlElements.DIV);
     writer.writeClassAttribute(
@@ -104,15 +117,12 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
       writer.writeAttribute(DataAttributes.VALUE, formattedValue, true);
       writer.writeClassAttribute(
         contains ? BootstrapClass.TABLE_ACTIVE : null,
-        item.isDisabled() ? BootstrapClass.TEXT_MUTED : null);
+        disabled || item.isDisabled() ? TobagoClass.DISABLED : null);
 
       writer.startElement(HtmlElements.TD);
       writer.writeAttribute(HtmlAttributes.VALUE, formattedValue, true);
       writer.writeText(item.getLabel());
       writer.endElement(HtmlElements.TD);
-//      writer.startElement(HtmlElements.TD);
-//      writer.writeText("dummy column");
-//      writer.endElement(HtmlElements.TD);
       writer.endElement(HtmlElements.TR);
     }
 
@@ -150,7 +160,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.endElement(HtmlElements.SELECT);
   }
 
-  private void renderFilterInput(FacesContext facesContext, T component) throws IOException {
+  private void renderSelectField(FacesContext facesContext, T component) throws IOException {
     final TobagoResponseWriter writer = getResponseWriter(facesContext);
 
     final String clientId = component.getClientId(facesContext);
@@ -171,7 +181,6 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
       inline ? BootstrapClass.FORM_CONTROL : BootstrapClass.FORM_SELECT,
       TobagoClass.SELECT__FIELD,
       inline ? BootstrapClass.LIST_GROUP_ITEM : BootstrapClass.DROPDOWN_TOGGLE,
-      disabled ? TobagoClass.DISABLED : null,
       BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
       component.getCustomClass());
     writer.writeAttribute(HtmlAttributes.TITLE, title, true);

@@ -42,11 +42,14 @@ $icon-sort-8: "\f7c1";
 $icon-sort-9: "\f7c7";
 
 /* non-bootstrap variables --------------------------------------- */
-
 $tobago-form-disabled-alpha: 0.5;
 $tobago-page-padding-top: 1rem;
 $tobago-header-margin-bottom: $tobago-page-padding-top;
 $tobago-flex-layout-spacing: 0.5rem;
+
+/* bootstrap variables --------------------------------------- */
+$input-disabled-color: rgba($input-color, $tobago-form-disabled-alpha) !default;
+$form-select-disabled-color: rgba($form-select-color, $tobago-form-disabled-alpha) !default;
 
 /* utilities ----------------------------------------------------- */
 .tobago-display-inline-block {
@@ -1191,7 +1194,7 @@ tobago-select-many {
 
   &.list-group {
     .tobago-options {
-      border-top: ($table-border-width * 2) solid $table-group-separator-color;
+      border-top-width: ($list-group-border-width * 2);
       overflow: auto;
     }
   }
@@ -1203,6 +1206,14 @@ tobago-select-many {
 
     &.list-group {
       @include formControlFocus();
+    }
+  }
+
+  &.tobago-disabled {
+    .tobago-select-field {
+      color: $form-select-disabled-color;
+      background-color: $form-select-disabled-bg;
+      border-color: $form-select-disabled-border-color;
     }
   }
 
@@ -1220,12 +1231,6 @@ tobago-select-many {
       border-bottom-right-radius: 0;
 
       padding: $form-select-padding-y $form-select-indicator-padding $form-select-padding-y $form-select-padding-x;
-    }
-
-    &.tobago-disabled {
-      color: $form-select-disabled-color;
-      background-color: $form-select-disabled-bg;
-      border-color: $form-select-disabled-border-color;
     }
 
     .btn-group + .tobago-filter {
@@ -1258,6 +1263,18 @@ tobago-select-many {
 
     .table {
       margin-bottom: 0;
+
+      tr {
+        cursor: pointer;
+
+        &.tobago-disabled {
+          color: $form-select-disabled-color;
+          background-color: $form-select-disabled-bg;
+          border-color: $form-select-disabled-border-color;
+          cursor: initial;
+          pointer-events: none;
+        }
+      }
     }
   }
 }
