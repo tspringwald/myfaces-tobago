@@ -1274,6 +1274,12 @@ tobago-select-many {
           cursor: initial;
           pointer-events: none;
         }
+
+        &:last-of-type {
+          td {
+            border-bottom-width: 0;
+          }
+        }
       }
     }
   }
