@@ -83,12 +83,6 @@ class SelectMany extends HTMLElement {
     document.addEventListener("click", this.clickEvent.bind(this));
     this.filterInput.addEventListener("focus", this.focusEvent.bind(this));
     this.filterInput.addEventListener("blur", this.blurEvent.bind(this));
-    this.badgeCloseButtons.forEach(
-      (closeButton) => {
-        closeButton.addEventListener("focus", this.focusEvent.bind(this));
-        closeButton.addEventListener("blur", this.blurEvent.bind(this));
-      }
-    );
 
     // init badges
     this.querySelectorAll("option:checked").forEach(
@@ -126,13 +120,8 @@ class SelectMany extends HTMLElement {
   }
 
   sync(option: HTMLOptionElement) {
-    console.log("this", this);
-    console.log("option", option);
-    console.log("ds", option.value);
     const itemValue = option.value;
-    console.log("itemValue", itemValue);
     const row: HTMLTableRowElement = this.tbody.querySelector(`[data-tobago-value="${itemValue}"]`);
-    console.log("row", row);
     if (option.selected) {
       // create badge
       this.filterInput.insertAdjacentHTML("beforebegin",
@@ -149,9 +138,7 @@ class SelectMany extends HTMLElement {
       row.classList.add(this.CssClass.TABLE_PRIMARY);
     } else {
       // remove badge
-      const selectField1 = this.selectField;
-      console.log("selectField1", selectField1);
-      const badge = selectField1.querySelector(`[data-tobago-value="${itemValue}"]`);
+      const badge = this.selectField.querySelector(`[data-tobago-value="${itemValue}"]`);
       const previousElementSibling = badge.previousElementSibling;
       badge.remove();
       if (previousElementSibling) {
@@ -207,8 +194,8 @@ class SelectMany extends HTMLElement {
   }
 
   private clickEvent(event: MouseEvent): void {
-    if (this.isPartOfSelectField(event.target as Element)) {
-      this.filterInput.focus();
+    if (this.isDeleted(event.target as Element)) {
+      // do nothing, this is probably a removed badge
     } else if (this.isPartOfComponent(event.target as Element)) {
       this.filterInput.focus();
     } else {
@@ -237,16 +224,8 @@ class SelectMany extends HTMLElement {
     }
   }
 
-  private isPartOfSelectField(element: Element): boolean {
-    if (element) {
-      if (this.selectField.id === element.id) {
-        return true;
-      } else {
-        return element.parentElement ? this.isPartOfSelectField(element.parentElement) : false;
-      }
-    } else {
-      return false;
-    }
+  private isDeleted(element: Element): boolean {
+    return element.closest("html") === null;
   }
 
   private hideDropdown(): void {
@@ -279,12 +258,9 @@ class SelectMany extends HTMLElement {
   }
 
   private blurEvent(event: FocusEvent): void {
-    if (event.relatedTarget === null) {
-      //this must be a mouse click; if tabbed out the relatedTarget is the new focused element
-    } else {
-      if (this.isPartOfSelectField(event.relatedTarget as Element)) {
-        //to nothing
-      } else if (this.isPartOfComponent(event.relatedTarget as Element)) {
+    if (event.relatedTarget !== null) {
+      //relatedTarget is the new focused element; null indicate a mouseclick or an inactive browser window
+      if (this.isPartOfComponent(event.relatedTarget as Element)) {
         this.filterInput.focus();
       } else {
         this.setFocus(false);
@@ -298,18 +274,6 @@ class SelectMany extends HTMLElement {
     } else {
       this.classList.remove(this.CssClass.TOBAGO_FOCUS);
     }
-  }
-
-  private focusFilter(event: MouseEvent): void {
-    // console.log("### focusFilter");
-  }
-
-  private blurFilter(event: MouseEvent): void {
-    // console.log("### blurFilter");
-  }
-
-  private blurSelect(event: MouseEvent): void {
-    // console.log("### blurSelect");
   }
 
   private initList() {
