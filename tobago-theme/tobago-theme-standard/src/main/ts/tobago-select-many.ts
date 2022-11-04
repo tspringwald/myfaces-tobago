@@ -70,11 +70,6 @@ class SelectMany extends HTMLElement {
   }
 
   connectedCallback(): void {
-    // todo: implement open/close dropdown-menu
-    // todo: position/size of dropdown-menu
-    // todo: implement select/deselect options
-    // todo: implement remove badge
-
     if (this.dropdownMenu) {
       window.addEventListener("resize", this.resizeEvent.bind(this));
       document.addEventListener("keydown", this.keydownEvent.bind(this));
@@ -138,13 +133,15 @@ class SelectMany extends HTMLElement {
     console.log("row", row);
     if (option.selected) {
       // create badge
-      this.filterInput.insertAdjacentHTML("beforebegin", this.getRowTemplate(itemValue, row.innerText));
+      this.filterInput.insertAdjacentHTML("beforebegin",
+        this.getRowTemplate(itemValue, row.innerText, option.disabled || this.hiddenSelect.disabled));
 
       // todo: nicer adding the @click with lit-html
-      const current = this.filterInput.parentElement.querySelector(".btn-group[data-tobago-value='" + itemValue + "']");
-      current.addEventListener("click", this.removeBadge.bind(this));
-      this.selectField.querySelector("button.btn.badge").addEventListener("focus", this.focusEvent.bind(this));
-      this.selectField.querySelector("button.btn.badge").addEventListener("blur", this.blurEvent.bind(this));
+      const closeButton = this.selectField
+        .querySelector(".btn-group[data-tobago-value='" + itemValue + "'] button.btn.badge");
+      closeButton?.addEventListener("click", this.removeBadge.bind(this));
+      closeButton?.addEventListener("focus", this.focusEvent.bind(this));
+      closeButton?.addEventListener("blur", this.blurEvent.bind(this));
 
       // highlight list row
       row.classList.add("table-active");
@@ -166,11 +163,13 @@ class SelectMany extends HTMLElement {
     }
   }
 
-  getRowTemplate(value: string, text: string): string {
+  getRowTemplate(value: string, text: string, disabled: boolean): string {
     return `
 <span class="btn-group" role="group" data-tobago-value="${value}">
-  <tobago-badge class="badge text-bg-primary btn">${text}</tobago-badge>
-  <button type="button" class="tobago-button btn btn-secondary badge"><i class="bi-x-lg"></i></button>
+  <tobago-badge class="badge text-bg-primary btn
+  ${disabled ? "disabled" : ""}">${text}</tobago-badge>
+  ${disabled ? ""
+      : "<button type='button' class='tobago-button btn btn-secondary badge'><i class='bi-x-lg'></i></button>"}
 </span>`;
   }
 
@@ -193,12 +192,11 @@ class SelectMany extends HTMLElement {
   }
 
   private showDropdown(event: Event): void {
-    console.log("### showDropdown");
+    // console.log("### showDropdown");
   }
 
   private shownDropdown(event: Event): void {
     this.setDropdownMenuWidth();
-    console.log("### shownDropdown");
   }
 
   private preventBootstrapHide(event: CustomEvent): void {
@@ -207,7 +205,7 @@ class SelectMany extends HTMLElement {
   }
 
   private clickEvent(event: MouseEvent): void {
-    if (this.isPartOfFilterWrapper(event.target as Element)) {
+    if (this.isPartOfSelectField(event.target as Element)) {
       this.filterInput.focus();
     } else if (this.isPartOfComponent(event.target as Element)) {
       this.filterInput.focus();
@@ -237,12 +235,12 @@ class SelectMany extends HTMLElement {
     }
   }
 
-  private isPartOfFilterWrapper(element: Element): boolean {
+  private isPartOfSelectField(element: Element): boolean {
     if (element) {
       if (this.selectField.id === element.id) {
         return true;
       } else {
-        return element.parentElement ? this.isPartOfFilterWrapper(element.parentElement) : false;
+        return element.parentElement ? this.isPartOfSelectField(element.parentElement) : false;
       }
     } else {
       return false;
@@ -259,7 +257,7 @@ class SelectMany extends HTMLElement {
   }
 
   private hiddenDropdown(event: Event): void {
-    console.log("### hiddenDropdown");
+    // console.log("### hiddenDropdown");
   }
 
   private resizeEvent(event: UIEvent): void {
@@ -273,14 +271,16 @@ class SelectMany extends HTMLElement {
   }
 
   private focusEvent(event: FocusEvent): void {
-    this.setFocus(true);
+    if (!this.hiddenSelect.disabled) {
+      this.setFocus(true);
+    }
   }
 
   private blurEvent(event: FocusEvent): void {
     if (event.relatedTarget === null) {
       //this must be a mouse click; if tabbed out the relatedTarget is the new focused element
     } else {
-      if (this.isPartOfFilterWrapper(event.relatedTarget as Element)) {
+      if (this.isPartOfSelectField(event.relatedTarget as Element)) {
         //to nothing
       } else if (this.isPartOfComponent(event.relatedTarget as Element)) {
         this.filterInput.focus();

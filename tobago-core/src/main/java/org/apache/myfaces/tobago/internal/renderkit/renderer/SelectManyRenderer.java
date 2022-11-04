@@ -66,8 +66,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final String fieldId = component.getFieldId(facesContext);
     final String filterId = clientId + ComponentUtils.SUB_SEPARATOR + "filter";
     final List<SelectItem> items = SelectItemUtils.getItemList(facesContext, component);
-    final boolean readonly = component.isReadonly();
-    final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || readonly;
+    final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || component.isReadonly();
     final String filter = component.getFilter();
     final boolean inline = component.isInline();
     final Markup markup = component.getMarkup();
@@ -135,14 +134,12 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final String clientId = component.getClientId(facesContext);
     final String selectedId = clientId + ComponentUtils.SUB_SEPARATOR + "selected";
     final List<SelectItem> items = SelectItemUtils.getItemList(facesContext, component);
-    final boolean readonly = component.isReadonly();
-    final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || readonly;
+    final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || component.isReadonly();
 
     writer.startElement(HtmlElements.SELECT);
     writer.writeIdAttribute(selectedId);
     writer.writeNameAttribute(clientId);
     writer.writeAttribute(HtmlAttributes.DISABLED, disabled);
-    writer.writeAttribute(HtmlAttributes.READONLY, readonly);
     writer.writeAttribute(HtmlAttributes.REQUIRED, component.isRequired());
     writer.writeClassAttribute(BootstrapClass.D_NONE);
     writer.writeAttribute(HtmlAttributes.MULTIPLE, true);
@@ -160,8 +157,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     final String fieldId = component.getFieldId(facesContext);
     final String filterId = clientId + ComponentUtils.SUB_SEPARATOR + "filter";
     final List<SelectItem> items = SelectItemUtils.getItemList(facesContext, component);
-    final boolean readonly = component.isReadonly();
-    final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || readonly;
+    final boolean disabled = !items.iterator().hasNext() || component.isDisabled() || component.isReadonly();
     final String filter = component.getFilter();
     final boolean inline = component.isInline();
     final Markup markup = component.getMarkup();
@@ -175,6 +171,7 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
       inline ? BootstrapClass.FORM_CONTROL : BootstrapClass.FORM_SELECT,
       TobagoClass.SELECT__FIELD,
       inline ? BootstrapClass.LIST_GROUP_ITEM : BootstrapClass.DROPDOWN_TOGGLE,
+      disabled ? TobagoClass.DISABLED : null,
       BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
       component.getCustomClass());
     writer.writeAttribute(HtmlAttributes.TITLE, title, true);
@@ -182,15 +179,14 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
       writer.writeAttribute(DataAttributes.BS_TOGGLE, "dropdown", false);
     }
     writer.writeAttribute(Arias.EXPANDED, Boolean.FALSE.toString(), false);
+    writer.writeAttribute(HtmlAttributes.DISABLED, disabled);
 
     writer.startElement(HtmlElements.INPUT);
     writer.writeAttribute(HtmlAttributes.TYPE, HtmlInputTypes.TEXT);
     writer.writeIdAttribute(filterId);
     writer.writeClassAttribute(TobagoClass.FILTER, BootstrapClass.FORM_CONTROL);
     writer.writeAttribute(HtmlAttributes.AUTOCOMPLETE, "off", false);
-
-    // todo: check real readonly
-    writer.writeAttribute(HtmlAttributes.READONLY, filter == null);
+    writer.writeAttribute(HtmlAttributes.READONLY, filter == null || disabled);
 
     writer.endElement(HtmlElements.INPUT);
 

@@ -49,6 +49,7 @@ public enum TobagoClass implements CssItem {
 //  DATE__PICKER("tobago-date-picker"),
   DELETED("tobago-deleted"),
   DESCENDING("tobago-descending"),
+  DISABLED("tobago-disabled"),
   DISPLAY__INLINE__BLOCK("tobago-display-inline-block"),
   DROPDOWN__SUBMENU("tobago-dropdown-submenu"),
   EXPANDED("tobago-expanded"),
