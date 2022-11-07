@@ -184,9 +184,6 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
       BootstrapClass.borderColor(ComponentUtils.getMaximumSeverity(component)),
       component.getCustomClass());
     writer.writeAttribute(HtmlAttributes.TITLE, title, true);
-    if (!inline) {
-      writer.writeAttribute(DataAttributes.BS_TOGGLE, "dropdown", false);
-    }
     writer.writeAttribute(Arias.EXPANDED, Boolean.FALSE.toString(), false);
     writer.writeAttribute(HtmlAttributes.DISABLED, disabled);
 

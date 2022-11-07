@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-import {BootstrapEvents} from "./BootstrapEvents";
 import {TobagoFilterRegistry} from "./tobago-filter-registry";
+import {createPopper, Instance} from "@popperjs/core";
 
 class SelectMany extends HTMLElement {
+  private popper: Instance;
 
   private readonly CssClass = {
     DROPDOWN_MENU: "dropdown-menu",
@@ -27,11 +28,16 @@ class SelectMany extends HTMLElement {
     TABLE_PRIMARY: "table-primary",
     TOBAGO_DISABLED: "tobago-disabled",
     TOBAGO_FOCUS: "tobago-focus",
+    TOBAGO_MARK: "tobago-mark",
     TOBAGO_OPTIONS: "tobago-options"
   };
 
   private readonly Key = {
-    ESCAPE: "Escape"
+    ARROW_DOWN: "ArrowDown",
+    ARROW_UP: "ArrowUp",
+    ENTER: "Enter",
+    ESCAPE: "Escape",
+    SPACE: " "
   };
 
   constructor() {
@@ -69,21 +75,27 @@ class SelectMany extends HTMLElement {
   }
 
   get tbody(): HTMLElement {
-    return this.querySelector("tbody");
+    const root = this.getRootNode() as ShadowRoot | Document;
+    return root.querySelector(`.tobago-options[name='${this.id}'] tbody`);
+  }
+
+  get enabledRows(): NodeListOf<HTMLTableRowElement> {
+    return this.tbody.querySelectorAll<HTMLTableRowElement>("tr:not(.tobago-disabled)");
+  }
+
+  get markedRow(): HTMLTableRowElement {
+    return this.tbody.querySelector<HTMLTableRowElement>("." + this.CssClass.TOBAGO_MARK);
   }
 
   connectedCallback(): void {
     if (this.dropdownMenu) {
+      this.popper = createPopper(this.selectField, this.dropdownMenu, {});
       window.addEventListener("resize", this.resizeEvent.bind(this));
-      this.addEventListener(BootstrapEvents.DROPDOWN_SHOW, this.showDropdown.bind(this));
-      this.addEventListener(BootstrapEvents.DROPDOWN_SHOWN, this.shownDropdown.bind(this));
-      this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.preventBootstrapHide.bind(this));
-      this.addEventListener(BootstrapEvents.DROPDOWN_HIDDEN, this.hiddenDropdown.bind(this));
     }
     document.addEventListener("click", this.clickEvent.bind(this));
     this.filterInput.addEventListener("focus", this.focusEvent.bind(this));
     this.filterInput.addEventListener("blur", this.blurEvent.bind(this));
-    this.addEventListener("keydown", this.keydownEvent.bind(this));
+    this.selectField.addEventListener("keydown", this.keydownEvent.bind(this));
 
     // init badges
     this.querySelectorAll("option:checked").forEach(
@@ -102,6 +114,10 @@ class SelectMany extends HTMLElement {
   select(event: MouseEvent): void {
     const target = <HTMLElement>event.target;
     const row = target.closest("tr");
+    this.selectRow(row);
+  }
+
+  selectRow(row: HTMLTableRowElement): void {
     const itemValue = row.dataset.tobagoValue;
     console.info("itemValue", itemValue);
     const select = this.hiddenSelect;
@@ -158,6 +174,9 @@ class SelectMany extends HTMLElement {
 
     if (!this.classList.contains(this.CssClass.TOBAGO_DISABLED) && this.filter === null) {
       // disable input field to prevent focus.
+      if (this.badgeCloseButtons.length > 0 && this.filterInput.id === document.activeElement.id) {
+        this.badgeCloseButtons.item(this.badgeCloseButtons.length - 1).focus();
+      }
       this.filterInput.disabled = this.badgeCloseButtons.length > 0;
     }
   }
@@ -190,19 +209,6 @@ class SelectMany extends HTMLElement {
     }
   }
 
-  private showDropdown(event: Event): void {
-    // console.log("### showDropdown");
-  }
-
-  private shownDropdown(event: Event): void {
-    this.setDropdownMenuWidth();
-  }
-
-  private preventBootstrapHide(event: CustomEvent): void {
-    event.stopPropagation();
-    event.preventDefault();
-  }
-
   private clickEvent(event: MouseEvent): void {
     if (this.isDeleted(event.target as Element)) {
       // do nothing, this is probably a removed badge
@@ -221,9 +227,88 @@ class SelectMany extends HTMLElement {
   }
 
   private keydownEvent(event: KeyboardEvent) {
-    if (event.key === this.Key.ESCAPE) {
-      this.hideDropdown();
+    switch (event.key) {
+      case this.Key.ESCAPE:
+        this.hideDropdown();
+        this.removeTableRowMark();
+        break;
+      case this.Key.ARROW_DOWN:
+        event.preventDefault();
+        this.showDropdown();
+        this.markNextTableRow();
+        break;
+      case this.Key.ARROW_UP:
+        event.preventDefault();
+        this.showDropdown();
+        this.markPreviousTableRow();
+        break;
+      case this.Key.ENTER:
+      case this.Key.SPACE:
+        if (this.markedRow) {
+          event.preventDefault();
+          this.selectMarkedOption();
+        } else if (document.activeElement.id === this.filterInput.id) {
+          this.showDropdown();
+        }
+        break;
     }
+  }
+
+  private markNextTableRow(): void {
+    const rows = this.enabledRows;
+    const indexOfMark = this.indexOfTobagoMark(rows);
+    if (indexOfMark >= 0) {
+      if (indexOfMark + 1 < rows.length) {
+        rows.item(indexOfMark).classList.remove(this.CssClass.TOBAGO_MARK);
+        this.addTableRowMark(rows.item(indexOfMark + 1));
+      } else {
+        rows.item(rows.length - 1).classList.remove(this.CssClass.TOBAGO_MARK);
+        this.addTableRowMark(rows.item(0));
+      }
+    } else if (rows.length > 0) {
+      this.addTableRowMark(rows.item(0));
+    }
+  }
+
+  private markPreviousTableRow(): void {
+    const rows = this.enabledRows;
+    const indexOfMark = this.indexOfTobagoMark(rows);
+    if (indexOfMark >= 0) {
+      if ((indexOfMark - 1) >= 0) {
+        rows.item(indexOfMark).classList.remove(this.CssClass.TOBAGO_MARK);
+        this.addTableRowMark(rows.item(indexOfMark - 1));
+      } else {
+        rows.item(0).classList.remove(this.CssClass.TOBAGO_MARK);
+        this.addTableRowMark(rows.item(rows.length - 1));
+      }
+    } else if (rows.length > 0) {
+      this.addTableRowMark(rows.item(rows.length - 1));
+    }
+  }
+
+  private addTableRowMark(row: HTMLTableRowElement): void {
+    row.classList.add(this.CssClass.TOBAGO_MARK);
+    if (!this.dropdownMenu) {
+      row.scrollIntoView({block: "center"});
+    }
+  }
+
+  private removeTableRowMark(): void {
+    this.markedRow?.classList.remove(this.CssClass.TOBAGO_MARK);
+  }
+
+  private selectMarkedOption(): void {
+    const row = this.tbody.querySelector<HTMLTableRowElement>("." + this.CssClass.TOBAGO_MARK);
+    this.selectRow(row);
+  }
+
+  private indexOfTobagoMark(rows: NodeListOf<HTMLTableRowElement>): number {
+    for (let i = 0; i < rows.length; i++) {
+      if (rows.item(i).classList.contains(this.CssClass.TOBAGO_MARK)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   private isPartOfComponent(element: Element): boolean {
@@ -244,24 +329,29 @@ class SelectMany extends HTMLElement {
     return element.closest("html") === null;
   }
 
+  private showDropdown(): void {
+    if (this.dropdownMenu && !this.dropdownMenu.classList.contains(this.CssClass.SHOW)) {
+      this.selectField.classList.add(this.CssClass.SHOW);
+      this.selectField.ariaExpanded = "true";
+      this.dropdownMenu.classList.add(this.CssClass.SHOW);
+      this.updateDropdownMenuWidth();
+      this.popper.update();
+    }
+  }
+
   private hideDropdown(): void {
     if (this.dropdownMenu?.classList.contains(this.CssClass.SHOW)) {
       this.selectField.classList.remove(this.CssClass.SHOW);
       this.selectField.ariaExpanded = "false";
       this.dropdownMenu.classList.remove(this.CssClass.SHOW);
-      console.log("### hideDropdown");
     }
   }
 
-  private hiddenDropdown(event: Event): void {
-    // console.log("### hiddenDropdown");
-  }
-
   private resizeEvent(event: UIEvent): void {
-    this.setDropdownMenuWidth();
+    this.updateDropdownMenuWidth();
   }
 
-  private setDropdownMenuWidth(): void {
+  private updateDropdownMenuWidth(): void {
     if (this.dropdownMenu) {
       this.dropdownMenu.style.width = `${this.offsetWidth}px`;
     }
@@ -269,7 +359,10 @@ class SelectMany extends HTMLElement {
 
   private focusEvent(event: FocusEvent): void {
     if (!this.hiddenSelect.disabled) {
-      this.setFocus(true);
+      if (!this.classList.contains(this.CssClass.TOBAGO_FOCUS)) {
+        this.setFocus(true);
+        this.showDropdown();
+      }
     }
   }
 

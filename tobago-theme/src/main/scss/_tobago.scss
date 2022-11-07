@@ -1275,6 +1275,11 @@ tobago-select-many {
           pointer-events: none;
         }
 
+        &.tobago-mark {
+          --bs-table-accent-bg: var(--bs-table-hover-bg);
+          color: var(--bs-table-hover-color);
+        }
+
         &:last-of-type {
           td {
             border-bottom-width: 0;
