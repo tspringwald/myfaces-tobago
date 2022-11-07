@@ -25,6 +25,7 @@ class SelectMany extends HTMLElement {
     SHOW: "show",
     TABLE_ACTIVE: "table-active",
     TABLE_PRIMARY: "table-primary",
+    TOBAGO_DISABLED: "tobago-disabled",
     TOBAGO_FOCUS: "tobago-focus",
     TOBAGO_OPTIONS: "tobago-options"
   };
@@ -74,7 +75,6 @@ class SelectMany extends HTMLElement {
   connectedCallback(): void {
     if (this.dropdownMenu) {
       window.addEventListener("resize", this.resizeEvent.bind(this));
-      document.addEventListener("keydown", this.keydownEvent.bind(this));
       this.addEventListener(BootstrapEvents.DROPDOWN_SHOW, this.showDropdown.bind(this));
       this.addEventListener(BootstrapEvents.DROPDOWN_SHOWN, this.shownDropdown.bind(this));
       this.addEventListener(BootstrapEvents.DROPDOWN_HIDE, this.preventBootstrapHide.bind(this));
@@ -83,6 +83,7 @@ class SelectMany extends HTMLElement {
     document.addEventListener("click", this.clickEvent.bind(this));
     this.filterInput.addEventListener("focus", this.focusEvent.bind(this));
     this.filterInput.addEventListener("blur", this.blurEvent.bind(this));
+    this.addEventListener("keydown", this.keydownEvent.bind(this));
 
     // init badges
     this.querySelectorAll("option:checked").forEach(
@@ -139,16 +140,25 @@ class SelectMany extends HTMLElement {
     } else {
       // remove badge
       const badge = this.selectField.querySelector(`[data-tobago-value="${itemValue}"]`);
-      const previousElementSibling = badge.previousElementSibling;
+      const previousBadge = badge.previousElementSibling;
+      const nextBadge = badge.nextElementSibling.tagName === "SPAN" ? badge.nextElementSibling : null;
       badge.remove();
-      if (previousElementSibling) {
-        previousElementSibling.querySelector<HTMLButtonElement>("button.btn.badge").focus();
+      if (previousBadge) {
+        previousBadge.querySelector<HTMLButtonElement>("button.btn.badge").focus();
+      } else if (nextBadge) {
+        nextBadge.querySelector<HTMLButtonElement>("button.btn.badge").focus();
       } else {
+        this.filterInput.disabled = false;
         this.filterInput.focus();
       }
 
       // remove highlight list row
       row.classList.remove(this.CssClass.TABLE_PRIMARY);
+    }
+
+    if (!this.classList.contains(this.CssClass.TOBAGO_DISABLED) && this.filter === null) {
+      // disable input field to prevent focus.
+      this.filterInput.disabled = this.badgeCloseButtons.length > 0;
     }
   }
 
@@ -197,7 +207,13 @@ class SelectMany extends HTMLElement {
     if (this.isDeleted(event.target as Element)) {
       // do nothing, this is probably a removed badge
     } else if (this.isPartOfComponent(event.target as Element)) {
-      this.filterInput.focus();
+
+      if (!this.filterInput.disabled) {
+        this.filterInput.focus();
+      } else if (this.badgeCloseButtons.length > 0) {
+        this.badgeCloseButtons[0].focus();
+      }
+
     } else {
       this.hideDropdown();
       this.setFocus(false);
@@ -260,10 +276,9 @@ class SelectMany extends HTMLElement {
   private blurEvent(event: FocusEvent): void {
     if (event.relatedTarget !== null) {
       //relatedTarget is the new focused element; null indicate a mouseclick or an inactive browser window
-      if (this.isPartOfComponent(event.relatedTarget as Element)) {
-        this.filterInput.focus();
-      } else {
+      if (!this.isPartOfComponent(event.relatedTarget as Element)) {
         this.setFocus(false);
+        this.hideDropdown();
       }
     }
   }

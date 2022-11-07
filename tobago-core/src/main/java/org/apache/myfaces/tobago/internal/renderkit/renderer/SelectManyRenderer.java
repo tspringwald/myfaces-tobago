@@ -195,7 +195,8 @@ public class SelectManyRenderer<T extends AbstractUISelectMany> extends SelectMa
     writer.writeIdAttribute(filterId);
     writer.writeClassAttribute(TobagoClass.FILTER, BootstrapClass.FORM_CONTROL);
     writer.writeAttribute(HtmlAttributes.AUTOCOMPLETE, "off", false);
-    writer.writeAttribute(HtmlAttributes.READONLY, filter == null || disabled);
+    writer.writeAttribute(HtmlAttributes.READONLY, filter == null);
+    writer.writeAttribute(HtmlAttributes.DISABLED, disabled);
 
     writer.endElement(HtmlElements.INPUT);
 
