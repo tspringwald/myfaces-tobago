@@ -59,8 +59,6 @@ public abstract class AbstractUISelectMany extends AbstractUISelectManyBase
 
   public abstract boolean isDisabled();
 
-  public abstract boolean isReadonly();
-
   public abstract boolean isInline();
 
   public boolean isError() {
