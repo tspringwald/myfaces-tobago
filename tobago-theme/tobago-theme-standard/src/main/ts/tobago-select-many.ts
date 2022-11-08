@@ -212,7 +212,8 @@ class SelectMany extends HTMLElement {
   private clickEvent(event: MouseEvent): void {
     if (this.isDeleted(event.target as Element)) {
       // do nothing, this is probably a removed badge
-    } else if (this.isPartOfComponent(event.target as Element)) {
+    } else if (this.isPartOfSelectField(event.target as Element)
+      || this.isPartOfDropdownMenu(event.target as Element)) {
 
       if (!this.filterInput.disabled) {
         this.filterInput.focus();
@@ -311,14 +312,25 @@ class SelectMany extends HTMLElement {
     return -1;
   }
 
-  private isPartOfComponent(element: Element): boolean {
+  private isPartOfSelectField(element: Element): boolean {
     if (element) {
-      if (this.id === element.id
-        || (element.classList?.contains(this.CssClass.DROPDOWN_MENU)
-          && this.id === element.getAttribute("name"))) {
+      if (this.selectField.id === element.id) {
         return true;
       } else {
-        return element.parentElement ? this.isPartOfComponent(element.parentElement) : false;
+        return element.parentElement ? this.isPartOfSelectField(element.parentElement) : false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  private isPartOfDropdownMenu(element: Element): boolean {
+    if (element) {
+      if (element.classList.contains(this.CssClass.DROPDOWN_MENU)
+        && this.id === element.getAttribute("name")) {
+        return true;
+      } else {
+        return element.parentElement ? this.isPartOfDropdownMenu(element.parentElement) : false;
       }
     } else {
       return false;
@@ -353,7 +365,7 @@ class SelectMany extends HTMLElement {
 
   private updateDropdownMenuWidth(): void {
     if (this.dropdownMenu) {
-      this.dropdownMenu.style.width = `${this.offsetWidth}px`;
+      this.dropdownMenu.style.width = `${this.selectField.offsetWidth}px`;
     }
   }
 
@@ -369,7 +381,8 @@ class SelectMany extends HTMLElement {
   private blurEvent(event: FocusEvent): void {
     if (event.relatedTarget !== null) {
       //relatedTarget is the new focused element; null indicate a mouseclick or an inactive browser window
-      if (!this.isPartOfComponent(event.relatedTarget as Element)) {
+      if (!this.isPartOfSelectField(event.relatedTarget as Element)
+        && !this.isPartOfDropdownMenu(event.relatedTarget as Element)) {
         this.setFocus(false);
         this.hideDropdown();
       }
