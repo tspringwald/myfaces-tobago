@@ -74,6 +74,9 @@
         <tag name="selectBooleanToggle">
           <attribute name="labelLayout" default="flexLeft"/>
         </tag>
+        <tag name="selectMany">
+          <attribute name="labelLayout" default="flexLeft"/>
+        </tag>
         <tag name="selectManyCheckbox">
           <attribute name="labelLayout" default="flexLeft"/>
         </tag>
